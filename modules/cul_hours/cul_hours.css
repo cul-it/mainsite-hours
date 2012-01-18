@@ -1,0 +1,68 @@
+
+   table.hourstable {
+      border: 0px;
+      padding: 5px;
+      margin: 5px;
+      width: 45%;
+   }
+   
+   tbody.hourscontent {
+      display: block;
+      height: 460px;
+      overflow: scroll;
+   }
+
+   h2.hours { 
+   //   text-align: center;
+   }
+   table.hourstable td {
+      margin: 10px 10px;
+      padding: 5px;
+      width: 30%;
+      border: 1px dashed;
+   }
+   table.hourstable td.open:hover {
+      background-color: #A3FF85;
+      color: black;
+   }
+   table.hourstable td.closed:hover {
+      background-color: #FFCCCC;
+      color: black;
+   }
+   #outerdiv {
+
+   }
+   #campusmap {
+     width: 730px;
+     height: 600px;  
+
+   }
+   #details {
+     width: 350px;
+     height: 450px;
+	 display: block;
+     overflow: scroll;
+     float:right;
+     position: absolute;
+     top: 350px;
+     left: 660px; 
+   }
+   .today {
+      font-size: smaller;
+      font-weight: bold;
+  text-transform: uppercase;
+
+   }
+   .open {
+      background-image: url('http://www.library.cornell.edu/mjc12/mobilecul/library_open.png'); 
+      background-repeat: no-repeat;
+      background-position: right;
+   }
+   .closed {
+      background-image: url('http://www.library.cornell.edu/mjc12/mobilecul/library_closed.png'); 
+      background-repeat: no-repeat;
+      background-position: right;
+   }
+   .hoursprompt {
+      font-size: x-large;
+    }

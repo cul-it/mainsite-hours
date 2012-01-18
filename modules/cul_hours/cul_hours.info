@@ -1,0 +1,8 @@
+; $Id$
+name = "cul_hours"
+description = "Dynamic library hours display for all CUL locations"
+package = "Cornell University Library"
+core = 6.x
+php = 5.1
+version = "6.x-1.0-beta1"
+
