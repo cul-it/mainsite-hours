@@ -1,5 +1,5 @@
 ; $Id$
-name = "cul_hours"
+name = "CUL Hours"
 description = "Dynamic library hours display for all CUL locations"
 package = "Cornell University Library"
 core = 6.x

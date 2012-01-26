@@ -54,12 +54,12 @@
 
    }
    .open {
-      background-image: url('http://www.library.cornell.edu/mjc12/mobilecul/library_open.png'); 
+	background-image: url('images/library_open.png');
       background-repeat: no-repeat;
       background-position: right;
    }
    .closed {
-      background-image: url('http://www.library.cornell.edu/mjc12/mobilecul/library_closed.png'); 
+      background-image: url('images/library_closed.png'); 
       background-repeat: no-repeat;
       background-position: right;
    }

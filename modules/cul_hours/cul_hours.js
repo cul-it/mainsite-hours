@@ -11,13 +11,12 @@ if (Drupal.jsEnabled) {
    
    // This appends all our jQuery stuff to the Drupal behaviors variable
    Drupal.behaviors.libraryhours = function (context) {
-      
       $('#details').html('<span class="hoursprompt">Click on a location from the list at the left to see the full semester schedule.</span>');
-      
+     // alert(Drupal.settings.cul_hours.imageloc + '/images/96-book.png');
       // Create the custom overlay for the CU Google map
-      document.domain = "cornell.edu";
+      document.domain = 'cornell.edu';
       customOverlay = { title: 'Libraries',
-                        iconURL: 'http://www.library.cornell.edu/mjc12/mobilecul/library_open.png'
+                        iconURL: Drupal.settings.cul_hours.module_path + '/images/96-book.png'
                       };
       customOverlay.points = [];   
       libs = Drupal.settings.libraryhours.libs; 
