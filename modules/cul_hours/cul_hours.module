@@ -464,7 +464,7 @@ function theme_cul_hours_exceptions($exceptionHoursList) {
                $exceptionoutput .= ' <span class="hours">';
                
                if ($libraryHours->startTime == $libraryHours->endTime) {
-                  $exceptionoutput .= '<strong class="closed">Closed</strong>';
+                  $exceptionoutput .= '<strong>Closed</strong>';
                } else {
                   $exceptionoutput .= get_formatted_time($libraryHours->startTime, $timeformat) . 
                               ' - ' . get_formatted_time($libraryHours->endTime, $timeformat);
