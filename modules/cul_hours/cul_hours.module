@@ -18,7 +18,8 @@
  *       latitude, longitude, name, current open/close status, and today's hours for each entry.  
  */
 function cul_hours_init() {
-   global $host;
+   global $host; global $base_url;
+
    //$host = 'http://victoria02.library.cornell.edu:8080';   # dev site
    $host = 'http://mannservices.mannlib.cornell.edu';
    
@@ -26,14 +27,17 @@ function cul_hours_init() {
    // TODO: set these to only load on the library hours page
    $module_path = drupal_get_path('module', 'cul_hours');
    drupal_add_css($module_path . '/cul_hours.css');
-   drupal_add_js($module_path . '/cul_hours.js'); 
-global $base_url; 
-   drupal_add_js(array('cul_hours' => array('module_path' => $base_url . '/' . drupal_get_path('module', 'cul_hours'))), 'setting');    
+   drupal_add_js($module_path . '/cul_hours.js');  
+   drupal_add_js(array('cul_hours' => array('module_path' => $base_url . '/' .   
+                                          drupal_get_path('module', 'cul_hours'))), 'setting');    // The path to the module must be passed into Javascript so that
+                               // a URL to the image resource can be used to create a custom overlay
+                               // on the CU campus map.
+
   // Map each library name to its abbreviation. The name is the name specified in the unit library
   // node, while the abbreviation identifies the library in the web services.
   global $abbrev_map;
   $abbrev_map = array('Africana Library' => 'Africana',
-                    'Medical Center Archives' => 'Medical',
+               #     'Medical Center Archives' => 'Medical',
                     'Engineering Library' => 'ENGR',
                     'Olin Library' => 'OLIN',
                     'Geneva Experiment Station Library' => 'GENEVA',
@@ -48,7 +52,7 @@ global $base_url;
                     'Management Library' => 'JGSM',
                     'Mann Library' => 'MANNLIB',
                     'Mathematics Library' => 'MATH',
-                    'Medical Library' => 'Medical',
+              #      'Medical Library' => 'Medical',
                     'Physical Sciences Library (Edna McConnell Clark Library)' => 'PHYSCI',
                     'Uris Library' => 'Uris',
                     'Veterinary Library' => 'Vet',
@@ -59,21 +63,49 @@ global $base_url;
    /************* Set up the main array of libraries with location and hours data ***************/              
    global $libs;
    $libs = array();
-   // Initial query to retrieve list of unit library nodes
+   $cul_map_names = array();
+   
+// Initial query to retrieve list of unit library nodes
    $results = db_query("select title from {node} where type='unit_library' order by title");
    while ($data = db_fetch_object($results)) {
       // Secondary query to retrieve latitude and longitude for each library
       $r2 = db_query("select latitude, longitude from {location} where name='" . $data->title . "'");
       $d2 = db_fetch_object($r2);
-      $libs[] = array("title" => $data->title,
+
+      // HACK: let's ignore the Medical School library resources because we never update their hours
+      // anyway...
+      $title = $data->title;
+      if ($title == 'Medical Library' or $title == 'Medical Center Archives') { continue; }
+
+      $libs[] = array("title" => $title,
                       "lat" => $d2->latitude,
                       "long" => $d2->longitude,
                       "open" => _cul_hours_isopen($data->title),     // Whether library is currently open
-                      "today" => cul_hours_today($data->title)    // Today's hours
+                      "today" => cul_hours_today($data->title)       // Today's hours
                  );
+
+      // We also need a slightly different naming scheme for the campus map, unfortunately
+      // HACK:
+      foreach ($libs as &$lib) {
+         $cul_map_names[$lib['title']] = $lib['title'];   // Most of the names are the same
+ 
+         // Second hack: custom 'today' text for virtual libraries
+         if ($lib['title'] == 'Engineering Library') {
+            $lib['today'] = '24/7 Study Space and Computing Only';
+         }
+         elseif ($lib['title'] == 'Physical Sciences Library (Edna McConnell Clark Library)') {
+            $lib['today'] = '24/7 Quiet Study Space Only'; 
+         } 
+      } 
+      $cul_map_names['Entomology Library'] = 'Comstock';
+      $cul_map_names['Africana Library'] = 'Africana';
+      $cul_map_names['Ornithology Library'] = 'Adelson';
+      $cul_map_names['Kroch Library, Division of Rare & Manuscript Collections'] = 'Olin Library';
+      $cul_map_names['Kroch Library, Division of Asia Collections'] = 'Olin Library';      
+      
    }
    // Add the libs array to the system Javascript so that it can be manipulated directly
-   drupal_add_js(array('libraryhours' => array('libs' => $libs)), 'setting'); 
+   drupal_add_js(array('cul_hours' => array('libs' => $libs, 'name_map' => $cul_map_names)), 'setting'); 
 }
 
 /**
