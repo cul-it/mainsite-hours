@@ -103,7 +103,7 @@ function cul_hours_init() {
       $cul_map_names['Kroch Library, Division of Rare & Manuscript Collections'] = 'Olin Library';
       $cul_map_names['Kroch Library, Division of Asia Collections'] = 'Olin Library';      
       
-   }
+   } 
    // Add the libs array to the system Javascript so that it can be manipulated directly
    drupal_add_js(array('cul_hours' => array('libs' => $libs, 'name_map' => $cul_map_names)), 'setting'); 
 }
@@ -310,18 +310,23 @@ function theme_cul_hours_about() {
 /**
  * Theme opening and closing hours for today. Input is a $hoursInfo structure.
  */
-function theme_cul_hours_today($hours) {
-  
+function theme_cul_hours_today($hours) { 
    $format = 'g:i a';
    $dayformat = 'l, F j, Y';
-   if (empty ($hours)) {
+   if (empty ($hours)) { 
       $output .= '<b>No Hours Available for this Location</b>';
    } else {   
-      if ($hours->startTime == $hours->endTime) {
+      if ($hours->override == 1) {
+         $output .= '<strong>Open 24 hours</strong>';
+      }
+      elseif ($hours->override == 2) {
          $output .= '<strong>Closed</strong>';
       } else {
          $output .= 'Open ' . get_formatted_time($hours->startTime, $format) . ' - ' .
                      get_formatted_time($hours->endTime, $format) . '';
+         if ($hours->note) {
+            $output .= '<br/>' . $hours->note;
+         }
       }
    }
    
@@ -333,7 +338,6 @@ function theme_cul_hours_today($hours) {
  * - modified to account for 24 hour openings & other locations -jgr25
  */
 function theme_cul_hours_default($hoursPackage) {
-
    $timeformat = 'g:i a';
    $dateCompareFormat = 'Ymd';
    $dayList = $hoursPackage->dayList;
@@ -413,9 +417,9 @@ function theme_cul_hours_default($hoursPackage) {
       if ($todaysWeight && $day == $dayOfWeek) {
          $output .= '<span class="today">today</span>';
       }
-      $output .= '</li>';
+      $output .= '</li>';      
 
-   } // end displaying days
+   } // end foreach day
    $output .= '</ul>';
 
    // Add any notes
@@ -749,11 +753,12 @@ function _cul_hours_format_default(
 
 
 /**
- * check for special case of open 24 hours. 
+ * check for special case of open 24 hours.
  */
 function _cul_hours_open_all_day($hours) {
 
 	return ($hours->override == 1);
+
 }
 
 
@@ -762,7 +767,8 @@ function _cul_hours_open_all_day($hours) {
  */
 function _cul_hours_closed_all_day($hours) {
 
-	return ($hours->override == 2);
+   return ($hours->override == 2);
+
 }
 
 function cul_hours_test() {
@@ -781,7 +787,7 @@ function theme_cul_hours_test() {
    
    // Create the header and start the table
    $today = date('l, F d, Y');
-   $output .= "<h2 class='hours'><span id='htitle'>Today's Hours – $today</span></h2><table class='hourstable'>";
+   $output .= "<h2 class='hours'><span id='htitle'>Today's Hours<br/>$today</span></h2><table class='hourstable'>";
    $output .= "<span id='showOption' style='text-align:center'><button type='button'>Show only what's open</button></span><span id='showNote'></span>";
    
    // Create the table of today's hours with links

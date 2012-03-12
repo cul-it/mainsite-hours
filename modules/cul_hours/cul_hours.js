@@ -3,23 +3,25 @@
  * Script helpers for cul_hours
  */
 /**
- * The libraryhours object.
+ * The cul_hours object.
  */
-var libraryhours = {};
+var cul_hours = {};
 
 if (Drupal.jsEnabled) {  
    
    // This appends all our jQuery stuff to the Drupal behaviors variable
-   Drupal.behaviors.libraryhours = function (context) {
+   Drupal.behaviors.cul_hours = function (context) {
       $('#details').html('<span class="hoursprompt">Click on a location from the list at the left to see the full semester schedule.</span>');
-     // alert(Drupal.settings.cul_hours.imageloc + '/images/96-book.png');
+   
       // Create the custom overlay for the CU Google map
       document.domain = 'cornell.edu';
       customOverlay = { title: 'Libraries',
                         iconURL: Drupal.settings.cul_hours.module_path + '/images/96-book.png'
                       };
-      customOverlay.points = [];   
-      libs = Drupal.settings.libraryhours.libs; 
+      customOverlay.points = [];  
+      libs = Drupal.settings.cul_hours.libs; 
+
+      nameMap = Drupal.settings.cul_hours.name_map;
       $.each(libs, function() { 
          customOverlay.points.push({ lat: this.lat,
                                      lng: this.long,
@@ -29,6 +31,9 @@ if (Drupal.jsEnabled) {
       
       // Attach event handler for when the user selects a particular library
       $('table.hourstable td').click( function() {
+
+         // Before first, add a progress indicator
+         $('#details').html('<span class="hoursprompt">Loading…</span>');
          
          // First, call up the semester schedule for that library and display it
          // (get just the text without the inner elements following the example here:
@@ -36,12 +41,13 @@ if (Drupal.jsEnabled) {
          var selectedLibrary = $(this).clone().children().remove().end().text();
          var itemIndex = $('td').index(this);
          $.get('libraryhours/get/semester/' + selectedLibrary, function(data) {
-            $('#details').html("<h2>Details for " + selectedLibrary + ":</h2>" + data);   
+            $('#details').addClass('detail_display').html("<h2>Details for " + selectedLibrary + ":</h2>" + data);   
          });
          
          // Secondly, center the map
+         
          iframe = document.getElementById('campusmap');
-         iframe.src = "http://www.cornell.edu/maps/gmap.cfm?iframe=1&hideLocList=1&hideOverlays=1&hideDir=1" + "&loc=" + selectedLibrary;
+         iframe.src = "http://www.cornell.edu/maps/gmap.cfm?iframe=1&hideLocList=1&hideOverlays=1&hideDir=1" + "&loc=" + nameMap[selectedLibrary];
       });
       
       // Toggle between showing a list of all libraries and only those that are currently open
@@ -58,7 +64,7 @@ if (Drupal.jsEnabled) {
          $('.closed').toggle(); 
       });
      
-   };  // End Drupal.behaviors.libraryhours definition
+   };  // End Drupal.behaviors.cul_hours definition
 
 }
 

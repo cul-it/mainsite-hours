@@ -5,13 +5,12 @@
       margin: 5px;
       width: 45%;
    }
-   
    tbody.hourscontent {
       display: block;
       height: 460px;
-      overflow: scroll;
+      overflow: auto;
+      overflow-x: hidden;
    }
-
    h2.hours { 
    //   text-align: center;
    }
@@ -20,6 +19,17 @@
       padding: 5px;
       width: 30%;
       border: 1px dashed;
+   }
+   table.hourstable td.open {
+	   background-image: url('images/library_open.png');
+      background-repeat: no-repeat;
+      background-position: right;
+   }
+   table.hourstable td.closed {
+      background-image: url('images/library_closed.png'); 
+      background-repeat: no-repeat;
+      background-position: right;
+
    }
    table.hourstable td.open:hover {
       background-color: #A3FF85;
@@ -33,36 +43,29 @@
 
    }
    #campusmap {
-     width: 730px;
-     height: 600px;  
+      width: 730px;
+      height: 600px;  
 
    }
    #details {
-     width: 350px;
-     height: 450px;
-	 display: block;
-     overflow: scroll;
-     float:right;
-     position: absolute;
-     top: 350px;
-     left: 660px; 
+      width: 380px;
+      height: 490px;
+      position: absolute;
+      top: 350px;
+      left: 50%;
+   }
+   .detail_display {
+      overflow: scroll;
+      overflow-x: hidden;
    }
    .today {
       font-size: smaller;
       font-weight: bold;
-  text-transform: uppercase;
-
-   }
-   .open {
-	background-image: url('images/library_open.png');
-      background-repeat: no-repeat;
-      background-position: right;
-   }
-   .closed {
-      background-image: url('images/library_closed.png'); 
-      background-repeat: no-repeat;
-      background-position: right;
+      text-transform: uppercase;
    }
    .hoursprompt {
+      position: absolute; 
+      top: 40%;
       font-size: x-large;
+      text-align: center;
     }
