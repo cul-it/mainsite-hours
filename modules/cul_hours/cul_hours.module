@@ -24,14 +24,15 @@ function cul_hours_init() {
    $host = 'http://mannservices.mannlib.cornell.edu';
    
    // Load the module's CSS and JS files.
-   // TODO: set these to only load on the library hours page
-   $module_path = drupal_get_path('module', 'cul_hours');
-   drupal_add_css($module_path . '/cul_hours.css');
-   drupal_add_js($module_path . '/cul_hours.js');  
-   drupal_add_js(array('cul_hours' => array('module_path' => $base_url . '/' .   
+   if ($_GET['q'] == 'libraryhours') { // only load these for the module-generated page
+      $module_path = drupal_get_path('module', 'cul_hours');
+      drupal_add_css($module_path . '/cul_hours.css');
+      drupal_add_js($module_path . '/cul_hours.js');  
+      drupal_add_js(array('cul_hours' => array('module_path' => $base_url . '/' .   
                                           drupal_get_path('module', 'cul_hours'))), 'setting');    // The path to the module must be passed into Javascript so that
                                // a URL to the image resource can be used to create a custom overlay
                                // on the CU campus map.
+   }
 
   // Map each library name to its abbreviation. The name is the name specified in the unit library
   // node, while the abbreviation identifies the library in the web services.
