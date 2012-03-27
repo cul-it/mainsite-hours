@@ -788,19 +788,19 @@ function theme_cul_hours_test() {
    
    // Create the header and start the table
    $today = date('l, F d, Y');
-   $output .= "<h2 class='hours'><span id='htitle'>Today's Hours<br/>$today</span></h2><table class='hourstable'>";
+   $output .= "<h2 class='hours'><span id='htitle'>Today's Hours<br/>$today</span></h2>";
    $output .= "<span id='showOption' style='text-align:center'><button type='button'>Show only what's open</button></span><span id='showNote'></span>";
    
    // Create the table of today's hours with links
-   $table_content = '<tbody class="hourscontent">';
+   $table_content = '<ul class="hourscontent">';
    for ($i = 0; $i < count($libs); $i++) {      
       $t1 = $libs[$i]['title'];
       $t1string = $t1 . '<br/>' . '<span class="today">' . $libs[$i]['today'] . '</span>';
       $t1class = ($libs[$i]['open'] ? "open" : "closed");
-      $table_content .= "<tr><td class='$t1class' onclick=\"centerMap('$t1');\">" . $t1string . "</td>" ;
+      $table_content .= "<li class='$t1class' onclick=\"centerMap('$t1');\">" . $t1string . "</li>" ;
    }
 
-   $table_content .= "</tbody></table>";
+   $table_content .= "</ul>";
    $output .= $table_content;
    
    // Add the details div

@@ -30,7 +30,7 @@ if (Drupal.jsEnabled) {
       });
       
       // Attach event handler for when the user selects a particular library
-      $('table.hourstable td').click( function() {
+      $('ul.hourscontent li').click( function() {
 
          // Before first, add a progress indicator
          $('#details').html('<span class="hoursprompt">Loading…</span>');
@@ -39,7 +39,7 @@ if (Drupal.jsEnabled) {
          // (get just the text without the inner elements following the example here:
          // http://viralpatel.net/blogs/2011/02/jquery-get-text-element-without-child-element.html)
          var selectedLibrary = $(this).clone().children().remove().end().text();
-         var itemIndex = $('td').index(this);
+         var itemIndex = $('li').index(this);
          $.get('libraryhours/get/semester/' + selectedLibrary, function(data) {
             $('#details').addClass('detail_display').html("<h2>Details for " + selectedLibrary + ":</h2>" + data);   
          });

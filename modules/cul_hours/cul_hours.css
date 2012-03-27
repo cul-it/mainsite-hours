@@ -1,41 +1,31 @@
-
-   table.hourstable {
-      border: 0px;
-      padding: 5px;
-      margin: 5px;
-      width: 45%;
-   }
-   tbody.hourscontent {
+   ul.hourscontent {
       display: block;
       height: 460px;
       overflow: auto;
       overflow-x: hidden;
+      width: 45%;
    }
-   h2.hours { 
-   //   text-align: center;
-   }
-   table.hourstable td {
-      margin: 10px 10px;
+   ul.hourscontent li {
+      margin: 5px 5px;
       padding: 5px;
-      width: 30%;
       border: 1px dashed;
    }
-   table.hourstable td.open {
+   ul.hourscontent li.open {
 	   background-image: url('images/library_open.png');
       background-repeat: no-repeat;
       background-position: right;
    }
-   table.hourstable td.closed {
+   ul.hourscontent li.closed {
       background-image: url('images/library_closed.png'); 
       background-repeat: no-repeat;
       background-position: right;
 
    }
-   table.hourstable td.open:hover {
+   ul.hourscontent li.open:hover {
       background-color: #A3FF85;
       color: black;
    }
-   table.hourstable td.closed:hover {
+   ul.hourscontent li.closed:hover {
       background-color: #FFCCCC;
       color: black;
    }
