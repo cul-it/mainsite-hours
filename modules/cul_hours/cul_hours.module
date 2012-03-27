@@ -647,7 +647,7 @@ function getLibraryHoursJson($url) {
       $data = $http_result->data;
       $c = json_decode($data);
       if (empty ($c)) {
-         drupal_set_message("Unable to decode json from library hours service");
+        // drupal_set_message("Unable to decode json from library hours service");
       }
       return $c;
    } else { // Otherwise we don't have any data
