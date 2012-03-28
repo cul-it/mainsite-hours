@@ -96,9 +96,11 @@ if ($_GET['q'] == 'libraryhours') {
          // Second hack: custom 'today' text for virtual libraries
          if ($lib['title'] == 'Engineering Library') {
             $lib['today'] = '24/7 Study Space and Computing Only';
+            $lib['open'] = true;
          }
          elseif ($lib['title'] == 'Physical Sciences Library (Edna McConnell Clark Library)') {
             $lib['today'] = '24/7 Quiet Study Space Only'; 
+            $lib['open'] = true;
          } 
       } 
       $cul_map_names['Entomology Library'] = 'Comstock';
@@ -191,7 +193,7 @@ function cul_hours_today($name) {
    
    $location = $abbrev_map[trim($name)]; 
    if (empty ($location)) {
-      // // drupal_set_message("The location must be specified when requesting today's hours.");
+      drupal_set_message("The location must be specified when requesting today's hours.");
       return '';
    } else {
       $url = $host . "/LibServices/showLibraryHoursToday.do?location=" . 
@@ -209,10 +211,10 @@ function cul_hours_today($name) {
 function cul_hours_specificdate($location, $date, $checkweight=NULL) {
    global $host;
    if (empty ($location)) {
-      // drupal_set_message("The location must be specified when requesting the hours for a specific date");
+      drupal_set_message("The location must be specified when requesting the hours for a specific date");
       return '';
    } elseif (empty ($date)) {
-      // drupal_set_message("The date must be specified when requesting the hours for a specific date :)");
+      drupal_set_message("The date must be specified when requesting the hours for a specific date :)");
       return '';
    } else {
       $url = $host . "/LibServices/showLibraryHoursForDate.do?location=" . urlencode($location) . "&date=" . urlencode($date) . "&output=json";
@@ -233,7 +235,7 @@ function cul_hours_academicsemester($location) {
    global $host;
    
    if (empty ($location)) {
-      // drupal_set_message("The location must be specified when requesting semester hours.");
+      drupal_set_message("The location must be specified when requesting semester hours.");
       return '';
    } else {
       $url = $host . "/LibServices/showLibraryHoursForAcademicSemester.do?location=" . htmlspecialcharacters(urlencode($location)) . "&output=json"; 
@@ -252,7 +254,7 @@ function cul_hours_academicyear($location, $year=NULL) {
    global $host;
 
    if (empty ($location)) {
-      // drupal_set_message("The location must be specified when requesting academic year hours.");
+      drupal_set_message("The location must be specified when requesting academic year hours.");
       return '';
    } else {
       if (empty ($year)) {
@@ -655,7 +657,7 @@ function getLibraryHoursJson($url) {
       $data = $http_result->data;
       $c = json_decode($data);
       if (empty ($c)) {
-        // // drupal_set_message("Unable to decode json from library hours service");
+        // drupal_set_message("Unable to decode json from library hours service");
       }
       return $c;
    } else { // Otherwise we don't have any data
