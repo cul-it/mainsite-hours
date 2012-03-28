@@ -14,7 +14,7 @@ if (Drupal.jsEnabled) {
       $('#details').html('<span class="hoursprompt">Click on a location from the list at the left to see the full semester schedule.</span>');
    
       // Create the custom overlay for the CU Google map
-      document.domain = 'cornell.edu';
+          document.domain = 'cornell.edu';
       customOverlay = { title: 'Libraries',
                         iconURL: Drupal.settings.cul_hours.module_path + '/images/96-book.png'
                       };
@@ -53,9 +53,9 @@ if (Drupal.jsEnabled) {
       // Toggle between showing a list of all libraries and only those that are currently open
       $('#showOption').click( function() {
          if ($('#showOption button').html() == "Show only what's open") {
-            var numHidden = $('td.closed').size();
+            var numHidden = $('li.closed').size();
             $('#showOption button').html('Show all libraries');
-            $('#showNote').html('(Hiding ' + numHidden + ' libraries)');
+            $('#showNote').html('(Hiding ' + numHidden + (numHidden == 1 ? ' library)' : ' libraries)')); 
          }
          else {
             $('#showOption button').html("Show only what's open");
