@@ -364,7 +364,7 @@ function theme_cul_hours_default($hoursPackage) {
       $todaysWeight = cul_hours_specificdate($location, $today, TRUE);
    }
 
-   foreach ($dayList as $day) {
+   foreach ($dayList as $day) { 
       // highlight if today
       if ($todaysWeight && $day == $dayOfWeek) {
          $output .= '<li class="today">';
@@ -372,49 +372,50 @@ function theme_cul_hours_default($hoursPackage) {
          $output .= '<li>';
       }
       $output .= '<strong>' . $day . '</strong> ';
-      $output .= '<span class="hours">';
-      switch ($day) {
-         case 'Monday':
+      $output .= '<span class="hours">'; 
+      
+      switch ($day) { 
+         case 'Monday': 
    			$output .= _cul_hours_format_default(
-   				$hoursPackage->sunOpen, $hoursPackage->sunClose,
-   				$hoursPackage->monOpen, $hoursPackage->monClose,
-   				$hoursPackage->tueOpen, $hoursPackage->tueClose);
+   				$hoursPackage->sunOpen, $hoursPackage->sunClose, $hoursPackage->sunOverride,
+   				$hoursPackage->monOpen, $hoursPackage->monClose, $hoursPackage->monOverride,
+   				$hoursPackage->tueOpen, $hoursPackage->tueClose, $hoursPackage->tueOverride);
    			break;
       	case 'Tuesday':
    			$output .= _cul_hours_format_default(
-   				$hoursPackage->monOpen, $hoursPackage->monClose,
-   				$hoursPackage->tueOpen, $hoursPackage->tueClose,
-   				$hoursPackage->wedOpen, $hoursPackage->wedClose);
+   				$hoursPackage->monOpen, $hoursPackage->monClose, $hoursPackage->monOverride,
+   				$hoursPackage->tueOpen, $hoursPackage->tueClose, $hoursPackage->tueOverride,
+   				$hoursPackage->wedOpen, $hoursPackage->wedClose, $hoursPackage->wedOverride);
    			break;
       	case 'Wednesday':
    			$output .= _cul_hours_format_default(
-   				$hoursPackage->tueOpen, $hoursPackage->tueClose,
-   				$hoursPackage->wedOpen, $hoursPackage->wedClose,
-   				$hoursPackage->thuOpen, $hoursPackage->thuClose);
+   				$hoursPackage->tueOpen, $hoursPackage->tueClose, $hoursPackage->tueOverride,
+   				$hoursPackage->wedOpen, $hoursPackage->wedClose, $hoursPackage->wedOverride,
+   				$hoursPackage->thuOpen, $hoursPackage->thuClose, $hoursPackage->thuOverride);
    			break;
       	case 'Thursday':
    			$output .= _cul_hours_format_default(
-   				$hoursPackage->wedOpen, $hoursPackage->wedClose,
-   				$hoursPackage->thuOpen, $hoursPackage->thuClose,
-   				$hoursPackage->friOpen, $hoursPackage->friClose);
+   				$hoursPackage->wedOpen, $hoursPackage->wedClose, $hoursPackage->wedOverride,
+   				$hoursPackage->thuOpen, $hoursPackage->thuClose, $hoursPackage->thuOverride,
+   				$hoursPackage->friOpen, $hoursPackage->friClose, $hoursPackage->friOverride);
    			break;
       	case 'Friday':
    			$output .= _cul_hours_format_default(
-   				$hoursPackage->thuOpen, $hoursPackage->thuClose,
-   				$hoursPackage->friOpen, $hoursPackage->friClose,
-   				$hoursPackage->satOpen, $hoursPackage->satClose);
+   				$hoursPackage->thuOpen, $hoursPackage->thuClose, $hoursPackage->thuOverride,
+   				$hoursPackage->friOpen, $hoursPackage->friClose, $hoursPackage->friOverride,
+   				$hoursPackage->satOpen, $hoursPackage->satClose, $hoursPackage->satOverride);
    			break;
       	case 'Saturday':
    			$output .= _cul_hours_format_default(
-   				$hoursPackage->friOpen, $hoursPackage->friClose,
-   				$hoursPackage->satOpen, $hoursPackage->satClose,
-   				$hoursPackage->sunOpen, $hoursPackage->sunClose);
+   				$hoursPackage->friOpen, $hoursPackage->friClose, $hoursPackage->friOverride,
+   				$hoursPackage->satOpen, $hoursPackage->satClose, $hoursPackage->satOverride,
+   				$hoursPackage->sunOpen, $hoursPackage->sunClose, $hoursPackage->sunOverride);
    			break;
       	case 'Sunday':
    			$output .= _cul_hours_format_default(
-   				$hoursPackage->satOpen, $hoursPackage->satClose,
-   				$hoursPackage->sunOpen, $hoursPackage->sunClose,
-   				$hoursPackage->monOpen, $hoursPackage->monClose);
+   				$hoursPackage->satOpen, $hoursPackage->satClose, $hoursPackage->satOverride,
+   				$hoursPackage->sunOpen, $hoursPackage->sunClose, $hoursPackage->sunOverride,
+   				$hoursPackage->monOpen, $hoursPackage->monClose, $hoursPackage->monOverride);
    			break;		
       }
    
@@ -718,39 +719,30 @@ function _cul_hours_special_timespan($openTime, $closeTime, $timeformat) {
  * special case formatting for default times -jgr25
  */
 function _cul_hours_format_default(
-   $prevOpen, $prevClose,	// previous day open close
-   $thisOpen, $thisClose,	// current day open close
-   $nextOpen, $nextClose	// next day open close
+   $prevOpen, $prevClose, $prevOverride,   // previous day open close override
+   $thisOpen, $thisClose, $thisOverride,	// current day open close override
+   $nextOpen, $nextClose, $nextOverride   // next day open close override
 	) {
 	
    $output = '';			
+
    $hours = (object) array('startTime' => $thisOpen, 'endTime' => $thisClose);
-   if (_cul_hours_open_all_day($hours)) {
-      $output = t('OPEN 24 HOURS');
-	}
-	else if (_cul_hours_closed_all_day($hours)) {
-		$output = t('Closed');
-	}
+
+   // Check override first
+   if       ($thisOverride == 1) { $output = 'OPEN 24 HOURS'; }
+   elseif   ($thisOverride == 2) { $output = 'CLOSED'; }
 	else {
 		$timeformat = 'g:i a';
 		$start = get_formatted_time($hours->startTime, $timeformat);
 		$end = get_formatted_time($hours->endTime, $timeformat);
 		
-		if ($start == 'Midnight') {
-         // see if it was open 24 hours the day before
-			$prevHours = (object) array('startTime' => $prevOpen, 'endTime' => $prevClose);
-			if (_cul_hours_open_all_day($prevHours)) {
-				// starting at Midnight after being open all day the day before
-				$output = t('Closes at @time', array('@time' => $end));
-				}			
+		if ($start == 'Midnight' and $prevOverride == 1) {
+			// starting at Midnight after being open all day the day before
+			$output = t('Closes at @time', array('@time' => $end));
 		}
-		else if ($end == 'Midnight') {
-			// see if it will be open 24 the next day
-			$nextHours = (object) array('startTime' => $nextOpen, 'endTime' => $nextClose);
-			if (_cul_hours_open_all_day($nextHours)) {
-				// ending at Midnight before being open all day the next day
-				$output = t('Opens at @time', array('@time' => $start));
-			}
+		elseif ($end == 'Midnight' and $nextOverride == 1) {
+			// ending at Midnight before being open all day the next day
+			$output = t('Opens at @time', array('@time' => $start));
 		}
 		
 		if (empty($output)) {
