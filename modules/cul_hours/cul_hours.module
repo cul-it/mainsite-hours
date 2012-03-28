@@ -147,7 +147,7 @@ function cul_hours_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['libraryhours/hours'] = array (
-    'page callback' => 'cul_hours_showall',
+    'page callback' => 'cul_hours_test',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -268,7 +268,7 @@ function cul_hours_academicyear($location, $year=NULL) {
 function cul_hours_theme() {
   return array (
     'cul_hours_about' => array (),
-    'cul_hours_showall' => array(),
+    'cul_hours_test' => array(),
     'cul_hours_today' => array (
       'arguments' => array (
         'hours' => NULL
@@ -772,17 +772,17 @@ function _cul_hours_closed_all_day($hours) {
 
 }
 
-function cul_hours_showall() {
+function cul_hours_test() {
    
    drupal_set_title('Library Hours');
-   return theme('cul_hours_showall');
+   return theme('cul_hours_test');
   
 }
 
 /*
  * Theme the main CUL hours and maps display.
  */
-function theme_cul_hours_showall() {
+function theme_cul_hours_test() {
    
    global $libs;
    
