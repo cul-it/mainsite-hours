@@ -91,7 +91,7 @@ if ($_GET['q'] == 'libraryhours') {
       // We also need a slightly different naming scheme for the campus map, unfortunately
       // HACK:
       foreach ($libs as &$lib) {
-         $cul_map_names[$lib['title']] = $lib['title'];   // Most of the names are the same
+         $cul_map_names[$lib['title']] = trim($lib['title']);   // Most of the names are the same
  
          // Second hack: custom 'today' text for virtual libraries
          if ($lib['title'] == 'Engineering Library') {
@@ -103,10 +103,12 @@ if ($_GET['q'] == 'libraryhours') {
             $lib['open'] = true;
          } 
       } 
+      // HACK: modify library names in order to obtain the correct search results on the CU map
       $cul_map_names['Entomology Library'] = 'Comstock';
-      $cul_map_names['Africana Library'] = 'Africana';
+      $cul_map_names['Africana Library '] = 'Africana';
       $cul_map_names['Ornithology Library'] = 'Adelson';
-      $cul_map_names['Kroch Library, Division of Rare & Manuscript Collections'] = 'Olin Library';
+      $cul_map_names['Physical Sciences Library (Edna McConnell Clark Library)']  = 'Clark Hall';
+      $cul_map_names['Kroch Library, Division of Rare and Manuscript Collections'] = 'Olin Library';
       $cul_map_names['Kroch Library, Division of Asia Collections'] = 'Olin Library';      
       
    } 
