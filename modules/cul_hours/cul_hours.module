@@ -807,6 +807,8 @@ function theme_cul_hours_test() {
 
    $table_content .= "</ul>";
    $output .= $table_content;
+
+   $output .= "<span><strong>Full PDFs:&nbsp;&nbsp;</strong><a href='sites/default/files/cul_spring_hours.pdf'>Spring</a> | <a href='sites/default/files/cul_summer_hours.pdf'>Summer</a> | <a href='sites/default/files/cul_fall_hours.pdf'>Fall</a> | <a href='sites/default/files/cul_winter_hours.pdf'>Winter</a></span>";
    
    // Add the details div
    $output .= '<div id="details"><span class="hoursprompt">Click on a location from the list at the left to see the full semester schedule.</span></div>';
