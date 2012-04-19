@@ -104,12 +104,13 @@ if ($_GET['q'] == 'libraryhours') {
          } 
       } 
       // HACK: modify library names in order to obtain the correct search results on the CU map
-      $cul_map_names['Entomology Library'] = 'Comstock';
+      $cul_map_names['Entomology Library'] = 'Comstock Hall';
       $cul_map_names['Africana Library '] = 'Africana';
       $cul_map_names['Ornithology Library'] = 'Adelson';
       $cul_map_names['Physical Sciences Library (Edna McConnell Clark Library)']  = 'Clark Hall';
       $cul_map_names['Kroch Library, Division of Rare and Manuscript Collections'] = 'Olin Library';
-      $cul_map_names['Kroch Library, Division of Asia Collections'] = 'Olin Library';      
+      $cul_map_names['Kroch Library, Division of Asia Collections'] = 'Olin Library';
+      $cul_map_names['Geneva Experiment Station Library'] = 'Jordan Hall';         
       
    } 
    // Add the libs array to the system Javascript so that it can be manipulated directly
