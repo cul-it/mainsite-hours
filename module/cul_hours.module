@@ -45,6 +45,7 @@ if ($_GET['q'] == 'libraryhours') {
                     'Olin Library' => 'OLIN',
                     'Geneva Experiment Station Library' => 'GENEVA',
                     'Industrial and Labor Relations Library' => 'ILR',
+                    'ILR Library' => 'ILR',
                     'Library Annex' => 'ANNEX',
                     'Entomology Library' => 'Entomology',
                     'Fine Arts Library' => 'Fine Arts',
@@ -81,6 +82,9 @@ if ($_GET['q'] == 'libraryhours') {
       $title = $data->title;
       if ($title == 'Medical Library' or $title == 'Medical Center Archives') { continue; }
 
+      // HACK: Special request from ILR...
+      if ($title == 'Industrial and Labor Relations Library') { $title = 'ILR Library'; }
+
       $libs[] = array("title" => $title,
                       "lat" => $d2->latitude,
                       "long" => $d2->longitude,
@@ -110,7 +114,8 @@ if ($_GET['q'] == 'libraryhours') {
       $cul_map_names['Physical Sciences Library (Edna McConnell Clark Library)']  = 'Clark Hall';
       $cul_map_names['Kroch Library, Division of Rare and Manuscript Collections'] = 'Olin Library';
       $cul_map_names['Kroch Library, Division of Asia Collections'] = 'Olin Library';
-      $cul_map_names['Geneva Experiment Station Library'] = 'Jordan Hall';         
+      $cul_map_names['Geneva Experiment Station Library'] = 'Jordan Hall';
+      $cul_map_names['ILR Library'] = 'Industrial and Labor Relations Library';      
       
    } 
    // Add the libs array to the system Javascript so that it can be manipulated directly
@@ -176,7 +181,17 @@ function cul_hours_menu() {
 function cul_hours_handle_ajax() {
    global $abbrev_map; 
    $location = $abbrev_map[arg(3)]; 
-   echo cul_hours_academicyear($location);   
+
+   // HACK: special messages for the virtual libraries (again)
+   if ($location == 'PHYSCI') {
+      echo '24/7 study space is available in Clark Hall.';
+   }
+   elseif ($location == 'ENGR') {
+      echo '24/7 study space is available in Carpenter Hall.';
+   }
+   else {
+      echo cul_hours_academicyear($location);   
+   }
 }
 
 /**
