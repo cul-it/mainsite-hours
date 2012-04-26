@@ -110,13 +110,23 @@ if ($_GET['q'] == 'libraryhours') {
       // HACK: modify library names in order to obtain the correct search results on the CU map
       $cul_map_names['Entomology Library'] = 'Comstock Hall';
       $cul_map_names['Africana Library '] = 'Africana';
-      $cul_map_names['Ornithology Library'] = 'Adelson';
+      $cul_map_names['Ornithology Library'] = 'Ornithology';
       $cul_map_names['Physical Sciences Library (Edna McConnell Clark Library)']  = 'Clark Hall';
       $cul_map_names['Kroch Library, Division of Rare and Manuscript Collections'] = 'Olin Library';
       $cul_map_names['Kroch Library, Division of Asia Collections'] = 'Olin Library';
       $cul_map_names['Geneva Experiment Station Library'] = 'Jordan Hall';
-      $cul_map_names['ILR Library'] = 'Industrial and Labor Relations Library';      
+      $cul_map_names['ILR Library'] = 'Ives Hall';      
       
+      // Extra hack-ish: an update to the CUL maps started generating errors on
+      // the locations not hacked above....
+      $cul_map_names['Engineering Library'] = 'Carpenter Hall';
+      $cul_map_names['Fine Arts Library'] = 'Rand Hall';
+      $cul_map_names['Hotel Library'] = 'Statler Hall';
+      $cul_map_names['Law Library'] = 'Myron Taylor Hall';
+      $cul_map_names['Management Library'] = 'Sage Hall';
+      $cul_map_names['Mathematics Library'] = 'Malott Hall';
+      $cul_map_names['Music Library'] = 'Lincoln Hall';
+      $cul_map_names['Veterinary Library'] = 'Vet';
    } 
    // Add the libs array to the system Javascript so that it can be manipulated directly
    drupal_add_js(array('cul_hours' => array('libs' => $libs, 'name_map' => $cul_map_names)), 'setting'); 
@@ -473,7 +483,9 @@ function theme_cul_hours_exceptions($exceptionHoursList) {
    foreach ($exceptionHoursList as $exceptionHoursInfo) {
       
       // strip year from tail end of packageName
-      $exceptionName = substr($exceptionHoursInfo->packageName, 0, -5);
+      //$exceptionName = substr($exceptionHoursInfo->packageName, 0, -5);
+      
+      $exceptionName = $exceptionHoursInfo->packageName;
       
       $libraryHoursList = $exceptionHoursInfo->libraryHoursList;
       

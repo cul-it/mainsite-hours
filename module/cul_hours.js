@@ -45,7 +45,6 @@ if (Drupal.jsEnabled) {
          });
          
          // Secondly, center the map
-         
          iframe = document.getElementById('campusmap');
          iframe.src = "http://www.cornell.edu/maps/gmap.cfm?iframe=1&hideLocList=1&hideOverlays=1&hideDir=1" + "&loc=" + nameMap[selectedLibrary];
       });
@@ -55,7 +54,7 @@ if (Drupal.jsEnabled) {
          if ($('#showOption button').html() == "Show only what's open") {
             var numHidden = $('li.closed').size();
             $('#showOption button').html('Show all libraries');
-            $('#showNote').html('(Hiding ' + numHidden + (numHidden == 1 ? ' library)' : ' libraries)')); 
+            $('#showNote').html('(Hiding ' + numHidden + (numHidden == 1 ? ' library)' : ' libraries)'));
          }
          else {
             $('#showOption button').html("Show only what's open");
