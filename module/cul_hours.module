@@ -40,14 +40,14 @@ if ($_GET['q'] == 'libraryhours') {
   // node, while the abbreviation identifies the library in the web services.
   global $abbrev_map;
   $abbrev_map = array('Africana Library' => 'Africana',
-               #     'Medical Center Archives' => 'Medical',
+               //     'Medical Center Archives' => 'Medical',
                     'Engineering Library' => 'ENGR',
                     'Olin Library' => 'OLIN',
                     'Geneva Experiment Station Library' => 'GENEVA',
                     'Industrial and Labor Relations Library' => 'ILR',
                     'ILR Library' => 'ILR',
                     'Library Annex' => 'ANNEX',
-                    'Entomology Library' => 'Entomology',
+               //     'Entomology Library' => 'Entomology',
                     'Fine Arts Library' => 'Fine Arts',
                     'Hotel Library' => 'Hotel',
                     'Kroch Library, Division of Asia Collections' => 'Kroch',
@@ -57,7 +57,7 @@ if ($_GET['q'] == 'libraryhours') {
                     'Management Library' => 'JGSM',
                     'Mann Library' => 'MANNLIB',
                     'Mathematics Library' => 'MATH',
-              #      'Medical Library' => 'Medical',
+              //      'Medical Library' => 'Medical',
                     'Physical Sciences Library (Edna McConnell Clark Library)' => 'PHYSCI',
                     'Uris Library' => 'Uris',
                     'Veterinary Library' => 'Vet',
@@ -79,8 +79,17 @@ if ($_GET['q'] == 'libraryhours') {
 
       // HACK: let's ignore the Medical School library resources because we never update their hours
       // anyway...
+      // Also ignoring the Entomology library now that it's closed
+      /*
+       * TODO: The idea of populating the hours list from the unit library nodes list
+       * isn't really working. There are too many exceptions. Probably better to switch
+       * to either a hard-coded or a configurable list!
+       */
       $title = $data->title;
-      if ($title == 'Medical Library' or $title == 'Medical Center Archives') { continue; }
+      if ($title == 'Medical Library' 
+          or $title == 'Medical Center Archives'
+          or $title == 'Entomology Library'
+          ) { continue; }
 
       // HACK: Special request from ILR...
       if ($title == 'Industrial and Labor Relations Library') { $title = 'ILR Library'; }
@@ -108,7 +117,7 @@ if ($_GET['q'] == 'libraryhours') {
          } 
       } 
       // HACK: modify library names in order to obtain the correct search results on the CU map
-      $cul_map_names['Entomology Library'] = 'Comstock Hall';
+    //  $cul_map_names['Entomology Library'] = 'Comstock Hall';
       $cul_map_names['Africana Library '] = 'Africana';
       $cul_map_names['Ornithology Library'] = 'Ornithology';
       $cul_map_names['Physical Sciences Library (Edna McConnell Clark Library)']  = 'Clark Hall';
