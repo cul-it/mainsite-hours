@@ -142,6 +142,20 @@ if ($_GET['q'] == 'libraryhours') {
 }
 
 /**
+ * Implementation of hook_exit()
+ */
+function cul_hours_exit() {
+   // We've been having trouble with the hours display not updating properly because (I think)
+   // the display is being cached. This should force the cached page to clear at the end of 
+   // every request.
+   global $base_url;
+   $url_pos = strpos($_GET['q'], 'libraryhours');
+   if ($url_pos !== FALSE) {  // TODO: can we get rid of the hardcoded 'libraryhours'?
+      cache_clear_all($base_url . '/' . $_GET['q'], 'cache_page'); 
+   }
+}
+
+/**
  * Determine whether the specified library is open currently.
  * $name = library name (as specified in the unit library's node)
  */
@@ -154,7 +168,8 @@ function _cul_hours_isopen($name) {
    $url = $host . "/LibServices/showLibraryHoursStatus.do?location=" .
           urlencode($abbrev_map[$name]) . "&date=" . date('Y-m-d') . 
           '&start=' . date('H:i:s') . "&end=" . date('H:i:s') . "&output=json";
-   $hoursInfo = getLibraryHoursJson($url);
+          
+   $hoursInfo = getLibraryHoursJson($url); 
    if ($hoursInfo->String == "true") {
       return 1;
    }
