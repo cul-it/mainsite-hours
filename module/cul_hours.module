@@ -40,14 +40,14 @@ if ($_GET['q'] == 'libraryhours') {
   // node, while the abbreviation identifies the library in the web services.
   global $abbrev_map;
   $abbrev_map = array('Africana Library' => 'Africana',
-               #     'Medical Center Archives' => 'Medical',
+               //     'Medical Center Archives' => 'Medical',
                     'Engineering Library' => 'ENGR',
                     'Olin Library' => 'OLIN',
                     'Geneva Experiment Station Library' => 'GENEVA',
                     'Industrial and Labor Relations Library' => 'ILR',
                     'ILR Library' => 'ILR',
                     'Library Annex' => 'ANNEX',
-                    'Entomology Library' => 'Entomology',
+               //     'Entomology Library' => 'Entomology',
                     'Fine Arts Library' => 'Fine Arts',
                     'Hotel Library' => 'Hotel',
                     'Kroch Library, Division of Asia Collections' => 'Kroch',
@@ -57,7 +57,7 @@ if ($_GET['q'] == 'libraryhours') {
                     'Management Library' => 'JGSM',
                     'Mann Library' => 'MANNLIB',
                     'Mathematics Library' => 'MATH',
-              #      'Medical Library' => 'Medical',
+              //      'Medical Library' => 'Medical',
                     'Physical Sciences Library (Edna McConnell Clark Library)' => 'PHYSCI',
                     'Uris Library' => 'Uris',
                     'Veterinary Library' => 'Vet',
@@ -79,8 +79,17 @@ if ($_GET['q'] == 'libraryhours') {
 
       // HACK: let's ignore the Medical School library resources because we never update their hours
       // anyway...
+      // Also ignoring the Entomology library now that it's closed
+      /*
+       * TODO: The idea of populating the hours list from the unit library nodes list
+       * isn't really working. There are too many exceptions. Probably better to switch
+       * to either a hard-coded or a configurable list!
+       */
       $title = $data->title;
-      if ($title == 'Medical Library' or $title == 'Medical Center Archives') { continue; }
+      if ($title == 'Medical Library' 
+          or $title == 'Medical Center Archives'
+          or $title == 'Entomology Library'
+          ) { continue; }
 
       // HACK: Special request from ILR...
       if ($title == 'Industrial and Labor Relations Library') { $title = 'ILR Library'; }
@@ -108,7 +117,7 @@ if ($_GET['q'] == 'libraryhours') {
          } 
       } 
       // HACK: modify library names in order to obtain the correct search results on the CU map
-      $cul_map_names['Entomology Library'] = 'Comstock Hall';
+    //  $cul_map_names['Entomology Library'] = 'Comstock Hall';
       $cul_map_names['Africana Library '] = 'Africana';
       $cul_map_names['Ornithology Library'] = 'Ornithology';
       $cul_map_names['Physical Sciences Library (Edna McConnell Clark Library)']  = 'Clark Hall';
@@ -133,6 +142,20 @@ if ($_GET['q'] == 'libraryhours') {
 }
 
 /**
+ * Implementation of hook_exit()
+ */
+function cul_hours_exit() {
+   // We've been having trouble with the hours display not updating properly because (I think)
+   // the display is being cached. This should force the cached page to clear at the end of 
+   // every request.
+   global $base_url;
+   $url_pos = strpos($_GET['q'], 'libraryhours');
+   if ($url_pos !== FALSE) {  // TODO: can we get rid of the hardcoded 'libraryhours'?
+      cache_clear_all($base_url . '/' . $_GET['q'], 'cache_page'); 
+   }
+}
+
+/**
  * Determine whether the specified library is open currently.
  * $name = library name (as specified in the unit library's node)
  */
@@ -145,7 +168,8 @@ function _cul_hours_isopen($name) {
    $url = $host . "/LibServices/showLibraryHoursStatus.do?location=" .
           urlencode($abbrev_map[$name]) . "&date=" . date('Y-m-d') . 
           '&start=' . date('H:i:s') . "&end=" . date('H:i:s') . "&output=json";
-   $hoursInfo = getLibraryHoursJson($url);
+          
+   $hoursInfo = getLibraryHoursJson($url); 
    if ($hoursInfo->String == "true") {
       return 1;
    }
@@ -515,6 +539,7 @@ function theme_cul_hours_exceptions($exceptionHoursList) {
                   $exceptionoutput .= '<strong>Open 24 hours</strong>';
                }
                elseif ($libraryHours->override == 2) {
+                  $exceptionoutput .= '<strong>Closed</strong>';
                   $exceptionoutput .= '<strong>Closed</strong>';
                } else {
                   $exceptionoutput .= get_formatted_time($libraryHours->startTime, $timeformat) . 
