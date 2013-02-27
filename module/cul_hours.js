@@ -62,6 +62,23 @@ if (Drupal.jsEnabled) {
          }
          $('.closed').toggle(); 
       });
+
+      // Parameterize the URL query parameters, using the code from 
+      // http://stackoverflow.com/questions/5448545/how-to-retrieve-get-parameters-from-javascript
+      var prmstr = window.location.search.substr(1);
+      var prmarr = prmstr.split ("&");
+      var params = {};
+
+      for ( var i = 0; i < prmarr.length; i++) {
+         var tmparr = prmarr[i].split("=");
+         params[tmparr[0]] = tmparr[1];
+      }
+
+      // If a 'loc' location parameter is specified in the URL, simulate a click on that list item to focus the
+      // map and detail view on that library.
+      if (params.loc) { 
+         $('ul.hourscontent li#loc_' + params.loc).click();
+      }
      
    };  // End Drupal.behaviors.cul_hours definition
 

@@ -27,10 +27,10 @@ function cul_hours_init() {
    // TODO: set these to only load on the library hours page
    $module_path = drupal_get_path('module', 'cul_hours');
 
-if ($_GET['q'] == 'libraryhours') { 
-   drupal_add_css($module_path . '/cul_hours.css');
-   drupal_add_js($module_path . '/cul_hours.js');
-}  
+   if ($_GET['q'] == 'libraryhours') { 
+      drupal_add_css($module_path . '/cul_hours.css');
+      drupal_add_js($module_path . '/cul_hours.js');
+   }  
    drupal_add_js(array('cul_hours' => array('module_path' => $base_url . '/' .   
                                           drupal_get_path('module', 'cul_hours'))), 'setting');    // The path to the module must be passed into Javascript so that
                                // a URL to the image resource can be used to create a custom overlay
@@ -663,28 +663,30 @@ function theme_cul_hours_academicyear($hoursInfo) {
    } else { 
       $numSemesters = count($hoursInfo->academicSemesterList);
       $i = 1;
-      foreach ($hoursInfo->academicSemesterList as $academicSemesterHoursInfo) { 
-         $output .= theme('cul_hours_academicsemester', $academicSemesterHoursInfo);
-         $hoursPackage = $academicSemesterHoursInfo->semesterHoursPackage;
-      
-         // strip year from tail end of packageName
-         $semesterName = substr($hoursPackage->packageName, 0, -5);
-         
-         $fromDate = $hoursPackage->fromDate;
-         $dateCompareFormat = 'Ymd';
-      
-         // check to see if we've already entered the Summer Session
-         // if so, let's include the hours for the following academic year
-         if ($i == $numSemesters) {
-            if (date($dateCompareFormat, $fromDate) <= date($dateCompareFormat)) {
-               $location = $hoursPackage->locationName;
-               $currentSummerYear = date("Y", $fromDate);
-               $followingYear = $currentSummerYear + 1;
-               $nextAcademicYear = $currentSummerYear . '-' . $followingYear;
-               $output .= cul_hours_academicyear($location, $nextAcademicYear);
-            }
-         }
-         $i++;
+      if (isset($hoursInfo->academicSemesterList)) {
+        foreach ($hoursInfo->academicSemesterList as $academicSemesterHoursInfo) { 
+           $output .= theme('cul_hours_academicsemester', $academicSemesterHoursInfo);
+           $hoursPackage = $academicSemesterHoursInfo->semesterHoursPackage;
+        
+           // strip year from tail end of packageName
+           $semesterName = substr($hoursPackage->packageName, 0, -5);
+           
+           $fromDate = $hoursPackage->fromDate;
+           $dateCompareFormat = 'Ymd';
+        
+           // check to see if we've already entered the Summer Session
+           // if so, let's include the hours for the following academic year
+           if ($i == $numSemesters) {
+              if (date($dateCompareFormat, $fromDate) <= date($dateCompareFormat)) {
+                 $location = $hoursPackage->locationName;
+                 $currentSummerYear = date("Y", $fromDate);
+                 $followingYear = $currentSummerYear + 1;
+                 $nextAcademicYear = $currentSummerYear . '-' . $followingYear;
+                 $output .= cul_hours_academicyear($location, $nextAcademicYear);
+              }
+           }
+           $i++;
+        }
       }
    }
    
@@ -844,7 +846,7 @@ function cul_hours_test() {
  */
 function theme_cul_hours_test() {
    
-   global $libs;
+   global $libs, $abbrev_map;
    
    // Create the header and start the table
    $today = date('l, F d, Y');
@@ -855,10 +857,12 @@ function theme_cul_hours_test() {
    $table_content = '<ul class="hourscontent">';
    for ($i = 0; $i < count($libs); $i++) {      
       $t1 = $libs[$i]['title'];
+      $t1 = trim($t1);
       $t1 = str_replace('&', 'and', $t1);
       $t1string = $t1 . '<br/>' . '<span class="today">' . $libs[$i]['today'] . '</span>';
       $t1class = ($libs[$i]['open'] ? "open" : "closed");
-      $table_content .= "<li class='$t1class'>" . $t1string . "</li>" ;
+      $t1id = "loc_" . $abbrev_map[$t1];
+      $table_content .= "<li id='$t1id' class='$t1class'>" . $t1string . "</li>" ;
    }
 
    $table_content .= "</ul>";
