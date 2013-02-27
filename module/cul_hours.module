@@ -862,6 +862,8 @@ function theme_cul_hours_test() {
       $t1string = $t1 . '<br/>' . '<span class="today">' . $libs[$i]['today'] . '</span>';
       $t1class = ($libs[$i]['open'] ? "open" : "closed");
       $t1id = "loc_" . $abbrev_map[$t1];
+      // HACK ... 'Fine Arts' isn't working, probably because of the space
+      if ($t1id == 'loc_Fine Arts') { $t1id = 'loc_FA'; }
       $table_content .= "<li id='$t1id' class='$t1class'>" . $t1string . "</li>" ;
    }
 
