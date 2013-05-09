@@ -532,15 +532,14 @@ function theme_cul_hours_exceptions($exceptionHoursList) {
                   $exceptionoutput .= '<li>';
                }
                
-               $exceptionoutput .= get_formatted_time($libraryHours->day, $dayformat);
-               $exceptionoutput .= ' <span class="hours">';
+               $exceptionoutput .= '<strong>'. get_formatted_time($libraryHours->day, $dayformat) . '</strong> &nbsp;&nbsp;';
+               $exceptionoutput .= '<span class="hours">';
                
                if ($libraryHours->override == 1) {
                   $exceptionoutput .= '<strong>Open 24 hours</strong>';
                }
                elseif ($libraryHours->override == 2) {
-                  $exceptionoutput .= '<strong>Closed</strong>';
-                  $exceptionoutput .= '<strong>Closed</strong>';
+                  $exceptionoutput .= 'CLOSED';
                } else {
                   $exceptionoutput .= get_formatted_time($libraryHours->startTime, $timeformat) . 
                               ' - ' . get_formatted_time($libraryHours->endTime, $timeformat);
