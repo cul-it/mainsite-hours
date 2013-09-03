@@ -676,7 +676,7 @@ function theme_cul_hours_academicyear($hoursInfo) {
            // check to see if we've already entered the Summer Session
            // if so, let's include the hours for the following academic year
            if ($i == $numSemesters) {
-              if (date($dateCompareFormat, $fromDate) <= date($dateCompareFormat)) {
+              if (strtotime(date($dateCompareFormat)) - strtotime(date($dateCompareFormat, $fromDate)) < 0) {
                  $location = $hoursPackage->locationName;
                  $currentSummerYear = date("Y", $fromDate);
                  $followingYear = $currentSummerYear + 1;
