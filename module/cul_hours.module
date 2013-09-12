@@ -4,8 +4,8 @@
 
 /**
  * @file
- * Module for displaying library hours for all libraries 
- * 
+ * Module for displaying library hours for all libraries
+ *
  * This is a heavily modified version of the libraryhours module written by John Fereira and
  * further developed by Jim Reidy.
  */
@@ -13,25 +13,25 @@
 /**
  * Implementation of hook_init(). Used for three things:
  *    1. Sets the base URL of the library hours web serivce
- *    2. Creates a translation array of library names and abbreviations  
+ *    2. Creates a translation array of library names and abbreviations
  *    3. Creates an array of active libraries (based on the Unit Library node type) with
- *       latitude, longitude, name, current open/close status, and today's hours for each entry.  
+ *       latitude, longitude, name, current open/close status, and today's hours for each entry.
  */
 function cul_hours_init() {
    global $host; global $base_url;
 
    //$host = 'http://victoria02.library.cornell.edu:8080';   # dev site
    $host = 'http://mannservices.mannlib.cornell.edu';
-   
+
    // Load the module's CSS and JS files.
    // TODO: set these to only load on the library hours page
    $module_path = drupal_get_path('module', 'cul_hours');
 
-   if ($_GET['q'] == 'libraryhours') { 
+   if ($_GET['q'] == 'libraryhours') {
       drupal_add_css($module_path . '/cul_hours.css');
       drupal_add_js($module_path . '/cul_hours.js');
-   }  
-   drupal_add_js(array('cul_hours' => array('module_path' => $base_url . '/' .   
+   }
+   drupal_add_js(array('cul_hours' => array('module_path' => $base_url . '/' .
                                           drupal_get_path('module', 'cul_hours'))), 'setting');    // The path to the module must be passed into Javascript so that
                                // a URL to the image resource can be used to create a custom overlay
                                // on the CU campus map.
@@ -63,13 +63,13 @@ function cul_hours_init() {
                     'Veterinary Library' => 'Vet',
                     'Ornithology Library' => 'Ornithology',
                     'Music Library' => 'Music'
-                   ); 
-   
-   /************* Set up the main array of libraries with location and hours data ***************/              
+                   );
+
+   /************* Set up the main array of libraries with location and hours data ***************/
    global $libs;
    $libs = array();
    $cul_map_names = array();
-   
+
 // Initial query to retrieve list of unit library nodes
    $results = db_query("select title from {node} where type='unit_library' order by title");
    while ($data = db_fetch_object($results)) {
@@ -86,7 +86,7 @@ function cul_hours_init() {
        * to either a hard-coded or a configurable list!
        */
       $title = $data->title;
-      if ($title == 'Medical Library' 
+      if ($title == 'Medical Library'
           or $title == 'Medical Center Archives'
           or $title == 'Entomology Library'
           ) { continue; }
@@ -105,17 +105,17 @@ function cul_hours_init() {
       // HACK:
       foreach ($libs as &$lib) {
          $cul_map_names[$lib['title']] = trim($lib['title']);   // Most of the names are the same
- 
+
          // Second hack: custom 'today' text for virtual libraries
          if ($lib['title'] == 'Engineering Library') {
             $lib['today'] = '24/7 Study Space and Computing Only';
             $lib['open'] = true;
          }
          elseif ($lib['title'] == 'Physical Sciences Library (Edna McConnell Clark Library)') {
-            $lib['today'] = '24/7 Quiet Study Space Only'; 
+            $lib['today'] = '24/7 Quiet Study Space Only';
             $lib['open'] = true;
-         } 
-      } 
+         }
+      }
       // HACK: modify library names in order to obtain the correct search results on the CU map
     //  $cul_map_names['Entomology Library'] = 'Comstock Hall';
       $cul_map_names['Africana Library '] = 'Africana';
@@ -124,8 +124,8 @@ function cul_hours_init() {
       $cul_map_names['Kroch Library, Division of Rare and Manuscript Collections'] = 'Olin Library';
       $cul_map_names['Kroch Library, Division of Asia Collections'] = 'Olin Library';
       $cul_map_names['Geneva Experiment Station Library'] = 'Jordan Hall';
-      $cul_map_names['ILR Library'] = 'Ives Hall';      
-      
+      $cul_map_names['ILR Library'] = 'Ives Hall';
+
       // Extra hack-ish: an update to the CUL maps started generating errors on
       // the locations not hacked above....
       $cul_map_names['Engineering Library'] = 'Carpenter Hall';
@@ -136,9 +136,9 @@ function cul_hours_init() {
       $cul_map_names['Mathematics Library'] = 'Malott Hall';
       $cul_map_names['Music Library'] = 'Lincoln Hall';
       $cul_map_names['Veterinary Library'] = 'Vet';
-   } 
+   }
    // Add the libs array to the system Javascript so that it can be manipulated directly
-   drupal_add_js(array('cul_hours' => array('libs' => $libs, 'name_map' => $cul_map_names)), 'setting'); 
+   drupal_add_js(array('cul_hours' => array('libs' => $libs, 'name_map' => $cul_map_names)), 'setting');
 }
 
 /**
@@ -146,12 +146,12 @@ function cul_hours_init() {
  */
 function cul_hours_exit() {
    // We've been having trouble with the hours display not updating properly because (I think)
-   // the display is being cached. This should force the cached page to clear at the end of 
+   // the display is being cached. This should force the cached page to clear at the end of
    // every request.
    global $base_url;
    $url_pos = strpos($_GET['q'], 'libraryhours');
    if ($url_pos !== FALSE) {  // TODO: can we get rid of the hardcoded 'libraryhours'?
-      cache_clear_all($base_url . '/' . $_GET['q'], 'cache_page'); 
+      cache_clear_all($base_url . '/' . $_GET['q'], 'cache_page');
    }
 }
 
@@ -159,17 +159,17 @@ function cul_hours_exit() {
  * Determine whether the specified library is open currently.
  * $name = library name (as specified in the unit library's node)
  */
-function _cul_hours_isopen($name) { 
-   global $abbrev_map; 
+function _cul_hours_isopen($name) {
+   global $abbrev_map;
    global $host;
-   
+
    $name = trim($name);
    // Query the web service for current status
    $url = $host . "/LibServices/showLibraryHoursStatus.do?location=" .
-          urlencode($abbrev_map[$name]) . "&date=" . date('Y-m-d') . 
+          urlencode($abbrev_map[$name]) . "&date=" . date('Y-m-d') .
           '&start=' . date('H:i:s') . "&end=" . date('H:i:s') . "&output=json";
-          
-   $hoursInfo = getLibraryHoursJson($url); 
+
+   $hoursInfo = getLibraryHoursJson($url);
    if ($hoursInfo->String == "true") {
       return 1;
    }
@@ -213,8 +213,8 @@ function cul_hours_menu() {
  * Callback function to handle AJAX request to retrieve details about a specific library's hours
  */
 function cul_hours_handle_ajax() {
-   global $abbrev_map; 
-   $location = $abbrev_map[arg(3)]; 
+   global $abbrev_map;
+   $location = $abbrev_map[arg(3)];
 
    // HACK: special messages for the virtual libraries (again)
    if ($location == 'PHYSCI') {
@@ -224,7 +224,7 @@ function cul_hours_handle_ajax() {
       echo '24/7 study space is available in Carpenter Hall.';
    }
    else {
-      echo cul_hours_academicyear($location);   
+      echo cul_hours_academicyear($location);
    }
 }
 
@@ -239,16 +239,16 @@ function cul_hours_about() {
  * Retrieve and theme hours for a specific library.
  * $name = library name (as specified in the unit library's node)
  */
-function cul_hours_today($name) { 
+function cul_hours_today($name) {
    global $abbrev_map;
    global $host;
-   
-   $location = $abbrev_map[trim($name)]; 
+
+   $location = $abbrev_map[trim($name)];
    if (empty ($location)) {
       drupal_set_message("The location must be specified when requesting today's hours.");
       return '';
    } else {
-      $url = $host . "/LibServices/showLibraryHoursToday.do?location=" . 
+      $url = $host . "/LibServices/showLibraryHoursToday.do?location=" .
              urlencode($location) . "&output=json";
       $hoursInfo = getLibraryHoursJson($url);
       return theme_cul_hours_today($hoursInfo);
@@ -285,14 +285,14 @@ function cul_hours_specificdate($location, $date, $checkweight=NULL) {
 
 function cul_hours_academicsemester($location) {
    global $host;
-   
+
    if (empty ($location)) {
       drupal_set_message("The location must be specified when requesting semester hours.");
       return '';
    } else {
-      $url = $host . "/LibServices/showLibraryHoursForAcademicSemester.do?location=" . htmlspecialcharacters(urlencode($location)) . "&output=json"; 
+      $url = $host . "/LibServices/showLibraryHoursForAcademicSemester.do?location=" . htmlspecialcharacters(urlencode($location)) . "&output=json";
       $academicSemesterHoursInfo = getLibraryHoursJson($url);
-    
+
       return theme('cul_hours_academicsemester', $academicSemesterHoursInfo);
    }
 }
@@ -315,7 +315,7 @@ function cul_hours_academicyear($location, $year=NULL) {
          $url = $host . "/LibServices/showLibraryHoursForAcademicYear.do?location=" . urlencode($location) . "&year=" .urlencode($year) . "&output=json";
       }
       $hoursInfo = getLibraryHoursJson($url);
-      
+
       return theme('cul_hours_academicyear', $hoursInfo);
   }
 }
@@ -362,19 +362,19 @@ function cul_hours_theme() {
 function theme_cul_hours_about() {
    $output .= '<h4>Library Hours Module</h4>';
    $output .= '<p>Outputs a page with hours information and interactive map for all CUL libraries.</p>';
-   
+
    return $output;
 }
 
 /**
  * Theme opening and closing hours for today. Input is a $hoursInfo structure.
  */
-function theme_cul_hours_today($hours) { 
+function theme_cul_hours_today($hours) {
    $format = 'g:i a';
    $dayformat = 'l, F j, Y';
-   if (empty ($hours)) { 
+   if (empty ($hours)) {
       $output .= '<b>No Hours Available for this Location</b>';
-   } else {   
+   } else {
       if ($hours->override == 1) {
          $output .= '<strong>Open 24 hours</strong>';
       }
@@ -388,7 +388,7 @@ function theme_cul_hours_today($hours) {
          }
       }
    }
-   
+
    return $output;
 }
 
@@ -401,7 +401,7 @@ function theme_cul_hours_default($hoursPackage) {
    $dateCompareFormat = 'Ymd';
    $dayList = $hoursPackage->dayList;
    $ndays = count($dayList);
-  
+
 
    $output .= '<div class="regularHours">';
    $output .= '<ul class="libraryHours">';
@@ -416,7 +416,7 @@ function theme_cul_hours_default($hoursPackage) {
       $todaysWeight = cul_hours_specificdate($location, $today, TRUE);
    }
 
-   foreach ($dayList as $day) { 
+   foreach ($dayList as $day) {
       // highlight if today
       if ($todaysWeight && $day == $dayOfWeek) {
          $output .= '<li class="today">';
@@ -424,10 +424,10 @@ function theme_cul_hours_default($hoursPackage) {
          $output .= '<li>';
       }
       $output .= '<strong>' . $day . '</strong> ';
-      $output .= '<span class="hours">'; 
-      
-      switch ($day) { 
-         case 'Monday': 
+      $output .= '<span class="hours">';
+
+      switch ($day) {
+         case 'Monday':
    			$output .= _cul_hours_format_default(
    				$hoursPackage->sunOpen, $hoursPackage->sunClose, $hoursPackage->sunOverride,
    				$hoursPackage->monOpen, $hoursPackage->monClose, $hoursPackage->monOverride,
@@ -468,16 +468,16 @@ function theme_cul_hours_default($hoursPackage) {
    				$hoursPackage->satOpen, $hoursPackage->satClose, $hoursPackage->satOverride,
    				$hoursPackage->sunOpen, $hoursPackage->sunClose, $hoursPackage->sunOverride,
    				$hoursPackage->monOpen, $hoursPackage->monClose, $hoursPackage->monOverride);
-   			break;		
+   			break;
       }
-   
+
       $output .= '</span>';
-      
+
       // label if today
       if ($todaysWeight && $day == $dayOfWeek) {
          $output .= '<span class="today">today</span>';
       }
-      $output .= '</li>';      
+      $output .= '</li>';
 
    } // end foreach day
    $output .= '</ul>';
@@ -488,7 +488,7 @@ function theme_cul_hours_default($hoursPackage) {
    }
 
    $output .= '</div><!--regularHours-->'. "\n";
-   
+
    return $output;
 }
 
@@ -505,21 +505,21 @@ function theme_cul_hours_exceptions($exceptionHoursList) {
    $exceptionoutput = '';
 
    foreach ($exceptionHoursList as $exceptionHoursInfo) {
-      
+
       // strip year from tail end of packageName
       //$exceptionName = substr($exceptionHoursInfo->packageName, 0, -5);
-      
+
       $exceptionName = $exceptionHoursInfo->packageName;
-      
+
       $libraryHoursList = $exceptionHoursInfo->libraryHoursList;
-      
+
       // check to see if the end date for the exception has already passed
       // only display exceptions that have not already passed
       if (date($dateCompareFormat, $exceptionHoursInfo->endDay) >= date($dateCompareFormat)) {
          $current_exception_found = TRUE;
          $exceptionoutput .= '<h5 class="hoursException">' . $exceptionName . '</h5>';
          $exceptionoutput .= '<ul class="libraryHours">';
-         
+
          foreach ($libraryHoursList as $libraryHours) {
             // check to see if this specific day in the exception has already passed
             // only display exception days that have not already passed
@@ -531,21 +531,21 @@ function theme_cul_hours_exceptions($exceptionHoursList) {
                } else {
                   $exceptionoutput .= '<li>';
                }
-               
+
                $exceptionoutput .= '<strong>'. get_formatted_time($libraryHours->day, $dayformat) . '</strong> &nbsp;&nbsp;';
                $exceptionoutput .= '<span class="hours">';
-               
+
                if ($libraryHours->override == 1) {
                   $exceptionoutput .= '<strong>Open 24 hours</strong>';
                }
                elseif ($libraryHours->override == 2) {
                   $exceptionoutput .= 'CLOSED';
                } else {
-                  $exceptionoutput .= get_formatted_time($libraryHours->startTime, $timeformat) . 
+                  $exceptionoutput .= get_formatted_time($libraryHours->startTime, $timeformat) .
                               ' - ' . get_formatted_time($libraryHours->endTime, $timeformat);
                }
                $exceptionoutput .= '</span>';
-               
+
                // check to see if the exception is actually today
                if (date($dateCompareFormat, $libraryHours->day) == date($dateCompareFormat)) {
                   // if so, then let's label it as today's hours
@@ -554,7 +554,7 @@ function theme_cul_hours_exceptions($exceptionHoursList) {
                $exceptionoutput .= '</li>';
             } // end if this specific day in the exception has already passed
          }  //end foreach $libraryHoursList
-         
+
          $exceptionoutput .= '</ul>';
 
          // Add a note if there is one
@@ -564,7 +564,7 @@ function theme_cul_hours_exceptions($exceptionHoursList) {
 
       }  // end if this set of exceptions has not already passed
    } // end foreach $exceptionHoursList
-   
+
    $output .= '<div class="exceptions">';
    if ($current_exception_found) {
       $output .= '<h4>Exceptions</h4>';
@@ -573,7 +573,7 @@ function theme_cul_hours_exceptions($exceptionHoursList) {
       $output .= '<!-- no current exceptions -->';
    }
    $output .= '</div><!-- exceptions -->';
-  
+
    return $output;
 }
 
@@ -583,12 +583,12 @@ function theme_cul_hours_exceptions($exceptionHoursList) {
  * themes
  */
 function theme_cul_hours_academicsemester($academicSemesterHoursInfo) {
-   
+
    if (empty ($academicSemesterHoursInfo)) {
       $output .= '<p>No Hours Available for this Location</p>';
    } else {
       $hoursPackage = $academicSemesterHoursInfo->semesterHoursPackage;
-      
+
       // strip year from tail end of packageName
       $semesterName = substr($hoursPackage->packageName, 0, -5);
 
@@ -603,24 +603,24 @@ function theme_cul_hours_academicsemester($academicSemesterHoursInfo) {
       if (date($dateCompareFormat, $toDate) >= date($dateCompareFormat)) {
          // display semester hours header
          $output .= '<div class="semesterHours">';
-         $output .= '<h3>' . $semesterName . ' <em class="dateRange">' . 
-                     get_formatted_time($fromDate, $monthDayFormat) . ' - ' . 
-                     get_formatted_time($toDate, $monthDayFormat) . ', ' .   
+         $output .= '<h3>' . $semesterName . ' <em class="dateRange">' .
+                     get_formatted_time($fromDate, $monthDayFormat) . ' - ' .
+                     get_formatted_time($toDate, $monthDayFormat) . ', ' .
                      get_formatted_date($toDate, $yearFormat) . '</em></h3>';
 
          // Now start displaying the regular and exception hours
          $exceptionHoursList = $academicSemesterHoursInfo->exceptionHoursList;
          if ($exceptionHoursList) {
             $lastException = array_slice($exceptionHoursList, -1);
-            
+
             foreach ($lastException as $exceptionHoursInfo) {
                // check to see if we're currently in the last exception for any given semester
                // Removed this section 3/20/12 because indeed, it caused problems.
                // During Spring Break, the regular hours disappeared from several libraries'
                // display beacuse spring break happened to be the last set of exeptions for the
                // semester -- but of course, we want to display regular semester hours as well!
-//               if (date($dateCompareFormat, $exceptionHoursInfo->startDay) <= 
-//                   date($dateCompareFormat)) { 
+//               if (date($dateCompareFormat, $exceptionHoursInfo->startDay) <=
+//                   date($dateCompareFormat)) {
 //                  if (!empty ($exceptionHoursList) and ) {
 //                     // default hours no longer apply, so display exceptions only
 //                     // TODO: this logic doesn't follow. Why assume that there isn't a time period
@@ -628,7 +628,7 @@ function theme_cul_hours_academicsemester($academicSemesterHoursInfo) {
 //                     $exceptionHours = theme('cul_hours_exceptions', $exceptionHoursList);
 //                     $output .= $exceptionHours;
 //                  }
-//               } else { 
+//               } else {
                   // display default hours first, then exceptions
                   $output .= theme('cul_hours_default', $hoursPackage);
                   if (!empty ($exceptionHoursList)) {
@@ -642,11 +642,11 @@ function theme_cul_hours_academicsemester($academicSemesterHoursInfo) {
             // No exceptions, just show default hours
             $output .= theme('cul_hours_default', $hoursPackage);
          }
-      
+
          $output .= '</div><!--semesterHours-->'. "\n";
       }
    }
-   
+
    return $output;
 }
 
@@ -656,23 +656,23 @@ function theme_cul_hours_academicsemester($academicSemesterHoursInfo) {
  * cul_hours_academicsemester theme function
  */
 function theme_cul_hours_academicyear($hoursInfo) {
-  
+
    if (empty ($hoursInfo)) {
       $output .= '<p>No Hours Available for this Location</p>';
-   } else { 
+   } else {
       $numSemesters = count($hoursInfo->academicSemesterList);
       $i = 1;
       if (isset($hoursInfo->academicSemesterList)) {
-        foreach ($hoursInfo->academicSemesterList as $academicSemesterHoursInfo) { 
+        foreach ($hoursInfo->academicSemesterList as $academicSemesterHoursInfo) {
            $output .= theme('cul_hours_academicsemester', $academicSemesterHoursInfo);
            $hoursPackage = $academicSemesterHoursInfo->semesterHoursPackage;
-        
+
            // strip year from tail end of packageName
            $semesterName = substr($hoursPackage->packageName, 0, -5);
-           
+
            $fromDate = $hoursPackage->fromDate;
            $dateCompareFormat = 'Ymd';
-        
+
            // check to see if we've already entered the Summer Session
            // if so, let's include the hours for the following academic year
            if ($i == $numSemesters) {
@@ -688,7 +688,7 @@ function theme_cul_hours_academicyear($hoursInfo) {
         }
       }
    }
-   
+
    return $output;
 }
 
@@ -711,7 +711,7 @@ function cul_hours_help($path, $arg) {
  * @return json
  */
 function getLibraryHoursJson($url) {
-   
+
    $http_result = drupal_http_request($url);
    if ($http_result->code == 200) {
       $data = $http_result->data;
@@ -730,11 +730,11 @@ function getLibraryHoursJson($url) {
  * formatting string
  */
 function get_formatted_date($u, $fmt) {
-   
+
    $local_timezone = date_default_timezone_get();
    $d = date_make_date($u, $local_timezone, DATE_UNIX);
    $formatted_date = date_format_date($d, 'custom', $fmt);
-   
+
    return $formatted_date;
 }
 
@@ -743,14 +743,14 @@ function get_formatted_date($u, $fmt) {
  * formatting string
  */
 function get_formatted_time($u, $fmt) {
-  
+
    $formattedTime = date($fmt, $u);
    if ($formattedTime == "12:00 am") {
       $formattedTime = "Midnight";
    } elseif ($formattedTime == "12:00 pm") {
       $formattedTime = "Noon";
    }
-  
+
    return $formattedTime;
 }
 
@@ -771,8 +771,8 @@ function _cul_hours_special_timespan($openTime, $closeTime, $timeformat) {
 			}
 		}
 	return $output;
-	}	
-	
+	}
+
 
 /**
  * special case formatting for default times -jgr25
@@ -782,8 +782,8 @@ function _cul_hours_format_default(
    $thisOpen, $thisClose, $thisOverride,	// current day open close override
    $nextOpen, $nextClose, $nextOverride   // next day open close override
 	) {
-	
-   $output = '';			
+
+   $output = '';
 
    $hours = (object) array('startTime' => $thisOpen, 'endTime' => $thisClose);
 
@@ -794,7 +794,7 @@ function _cul_hours_format_default(
 		$timeformat = 'g:i a';
 		$start = get_formatted_time($hours->startTime, $timeformat);
 		$end = get_formatted_time($hours->endTime, $timeformat);
-		
+
 		if ($start == 'Midnight' and $prevOverride == 1) {
 			// starting at Midnight after being open all day the day before
 			$output = t('Closes at @time', array('@time' => $end));
@@ -803,13 +803,13 @@ function _cul_hours_format_default(
 			// ending at Midnight before being open all day the next day
 			$output = t('Opens at @time', array('@time' => $start));
 		}
-		
+
 		if (empty($output)) {
 			// normal situation with open and close times
 			$output = t('@start - @finish', array('@start' => $start, '@finish' => $end));
 		}
 	}
-	
+
 	return $output;
 }
 
@@ -834,27 +834,27 @@ function _cul_hours_closed_all_day($hours) {
 }
 
 function cul_hours_test() {
-   
+
    drupal_set_title('Library Hours');
    return theme('cul_hours_test');
-  
+
 }
 
 /*
  * Theme the main CUL hours and maps display.
  */
 function theme_cul_hours_test() {
-   
+
    global $libs, $abbrev_map;
-   
+
    // Create the header and start the table
    $today = date('l, F d, Y');
    $output .= "<h2 class='hours'><span id='htitle'>Today's Hours<br/>$today</span></h2>";
    $output .= "<span id='showOption' style='text-align:center'><button type='button'>Show only what's open</button></span><span id='showNote'></span>";
-   
+
    // Create the list of today's hours with links
    $table_content = '<ul class="hourscontent">';
-   for ($i = 0; $i < count($libs); $i++) {      
+   for ($i = 0; $i < count($libs); $i++) {
       $t1 = $libs[$i]['title'];
       $t1 = trim($t1);
       $t1 = str_replace('&', 'and', $t1);
@@ -870,7 +870,7 @@ function theme_cul_hours_test() {
    $output .= $table_content;
 
    $output .= "<span><strong>Full PDFs:&nbsp;&nbsp;</strong><a href='sites/default/files/cul_spring_hours.pdf'>Spring</a> | <a href='sites/default/files/cul_summer_hours.pdf'>Summer</a> | <a href='sites/default/files/cul_fall_hours.pdf'>Fall</a> | <a href='sites/default/files/cul_winter_hours.pdf'>Winter</a></span>";
-   
+
    // Add the details div
    $output .= '<div id="details"><span class="hoursprompt">Click on a location from the list at the left to see the full semester schedule.</span></div>';
 
@@ -879,6 +879,6 @@ function theme_cul_hours_test() {
       <div id="outerdiv">
       <iframe id="campusmap" src="http://www.cornell.edu/maps?iframe=1&hideLocList=1&hideDir=1&hideOverlays=1&zoom=15&suppressUserLoc=1" width="50%" height="550" frameborder="0"><p>The map is not appearing because the web browser in use does not support iframes.</p></iframe>
       </div>';
-      
+
    return $output;
 }
