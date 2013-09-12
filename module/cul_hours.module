@@ -79,7 +79,9 @@ function cul_hours_init() {
   while ($data = db_fetch_object($results)) {
     // Secondary query to retrieve latitude and longitude for each library
     // TODO Please convert this statement to the D7 database API syntax.
-    $r2 = db_query("select latitude, longitude from {location} where name='" . $data->title . "'");
+    //$r2 = db_query("select latitude, longitude from {location} where name='" . $data->title . "'");
+    $r2 = db_query("select latitude, longitude from {location} where name = :title",
+      array(':title' => $data->title));
     $d2 = db_fetch_object($r2);
 
     // HACK: let's ignore the Medical School library resources because we never update their hours
@@ -289,11 +291,6 @@ function cul_hours_specificdate($location, $date, $checkweight = NULL) {
 
 /**
  * Return themed HTML for the current academic semester for the given location.
- */
-
-/**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
  */
 function cul_hours_academicsemester($location) {
   global $host;
@@ -842,8 +839,8 @@ function _cul_hours_closed_all_day($hours) {
 }
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * hours test page
+ * @return string html of hours test page
  */
 function cul_hours_test() {
 
@@ -852,12 +849,9 @@ function cul_hours_test() {
 
 }
 
-/*
- * Theme the main CUL hours and maps display.
- */
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Theme the main CUL hours and maps display.
+ * @return string html output
  */
 function theme_cul_hours_test() {
 
