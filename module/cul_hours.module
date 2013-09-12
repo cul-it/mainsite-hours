@@ -93,7 +93,7 @@ function cul_hours_init() {
      * isn't really working. There are too many exceptions. Probably better to switch
      * to either a hard-coded or a configurable list!
      */
-    $title = $data->title;
+    $title = $data['title'];
     dsm(array($data, $title));
     if ($title == 'Medical Library' or $title == 'Medical Center Archives' or $title == 'Entomology Library') {
       continue;
