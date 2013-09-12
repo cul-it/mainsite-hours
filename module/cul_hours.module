@@ -11,7 +11,7 @@
  */
 
 /**
- * Implementation of hook_init(). Used for three things:
+ * Implements hook_init(). Used for three things:().
  *    1. Sets the base URL of the library hours web serivce
  *    2. Creates a translation array of library names and abbreviations
  *    3. Creates an array of active libraries (based on the Unit Library node type) with
@@ -32,7 +32,7 @@ function cul_hours_init() {
     drupal_add_css($module_path . '/cul_hours.css');
     drupal_add_js($module_path . '/cul_hours.js');
   }
-  drupal_add_js(array('cul_hours' => array('module_path' => $base_url . '/' . drupal_get_path('module', 'cul_hours'))), 'setting'); // The path to the module must be passed into Javascript so that
+  drupal_add_js(array('cul_hours' => array('module_path' => $base_url . '/' . drupal_get_path('module', 'cul_hours'))), array('type' => 'setting', 'scope' => JS_DEFAULT)); // The path to the module must be passed into Javascript so that
   // a URL to the image resource can be used to create a custom overlay
   // on the CU campus map.
 
@@ -78,6 +78,7 @@ function cul_hours_init() {
   $results = db_query("select title from {node} where type='unit_library' order by title");
   while ($data = db_fetch_object($results)) {
     // Secondary query to retrieve latitude and longitude for each library
+    // TODO Please convert this statement to the D7 database API syntax.
     $r2 = db_query("select latitude, longitude from {location} where name='" . $data->title . "'");
     $d2 = db_fetch_object($r2);
 
@@ -144,11 +145,11 @@ function cul_hours_init() {
     $cul_map_names['Veterinary Library'] = 'Vet';
   }
   // Add the libs array to the system Javascript so that it can be manipulated directly
-  drupal_add_js(array('cul_hours' => array('libs' => $libs, 'name_map' => $cul_map_names)), 'setting');
+  drupal_add_js(array('cul_hours' => array('libs' => $libs, 'name_map' => $cul_map_names)), array('type' => 'setting', 'scope' => JS_DEFAULT));
 }
 
 /**
- * Implementation of hook_exit()
+ * Implements hook_exit().
  */
 function cul_hours_exit() {
   // We've been having trouble with the hours display not updating properly because (I think)
@@ -184,7 +185,7 @@ function _cul_hours_isopen($name) {
 }
 
 /**
- * Implementation of hook_menu
+ * Implements hook_menu().
  */
 function cul_hours_menu() {
 
@@ -290,6 +291,10 @@ function cul_hours_specificdate($location, $date, $checkweight = NULL) {
  * Return themed HTML for the current academic semester for the given location.
  */
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function cul_hours_academicsemester($location) {
   global $host;
 
@@ -301,7 +306,7 @@ function cul_hours_academicsemester($location) {
     $url = $host . "/LibServices/showLibraryHoursForAcademicSemester.do?location=" . htmlspecialcharacters(urlencode($location)) . "&output=json";
     $academicSemesterHoursInfo = getLibraryHoursJson($url);
 
-    return theme('cul_hours_academicsemester', $academicSemesterHoursInfo);
+    return theme('cul_hours_academicsemester', array('academicSemesterHoursInfo' => $academicSemesterHoursInfo));
   }
 }
 
@@ -326,39 +331,39 @@ function cul_hours_academicyear($location, $year = NULL) {
     }
     $hoursInfo = getLibraryHoursJson($url);
 
-    return theme('cul_hours_academicyear', $hoursInfo);
+    return theme('cul_hours_academicyear', array('hoursInfo' => $hoursInfo));
   }
 }
 
 /**
- * Implementation of hook_theme
+ * Implements hook_theme().
  */
 function cul_hours_theme() {
   return array(
     'cul_hours_about' => array(),
     'cul_hours_test' => array(),
     'cul_hours_today' => array(
-      'arguments' => array(
+      'variables' => array(
         'hours' => NULL,
       ),
     ),
     'cul_hours_default' => array(
-      'arguments' => array(
+      'variables' => array(
         'hoursPackage' => NULL,
       ),
     ),
     'cul_hours_exceptions' => array(
-      'arguments' => array(
+      'variables' => array(
         'exceptionHoursList' => NULL,
       ),
     ),
     'cul_hours_academicsemester' => array(
-      'arguments' => array(
+      'variables' => array(
         'academicSemesterHoursInfo' => NULL,
       ),
     ),
     'cul_hours_academicyear' => array(
-      'arguments' => array(
+      'variables' => array(
         'hoursInfo' => NULL,
       ),
     ),
@@ -378,7 +383,8 @@ function theme_cul_hours_about() {
 /**
  * Theme opening and closing hours for today. Input is a $hoursInfo structure.
  */
-function theme_cul_hours_today($hours) {
+function theme_cul_hours_today($variables) {
+  $hours = $variables['hours'];
   $format = 'g:i a';
   $dayformat = 'l, F j, Y';
   if (empty($hours)) {
@@ -406,7 +412,8 @@ function theme_cul_hours_today($hours) {
  * theme default or regular hours
  * - modified to account for 24 hour openings & other locations -jgr25
  */
-function theme_cul_hours_default($hoursPackage) {
+function theme_cul_hours_default($variables) {
+  $hoursPackage = $variables['hoursPackage'];
   $timeformat = 'g:i a';
   $dateCompareFormat = 'Ymd';
   $dayList = $hoursPackage->dayList;
@@ -484,7 +491,8 @@ function theme_cul_hours_default($hoursPackage) {
 /**
  * theme exception hours list
  */
-function theme_cul_hours_exceptions($exceptionHoursList) {
+function theme_cul_hours_exceptions($variables) {
+  $exceptionHoursList = $variables['exceptionHoursList'];
   $dayformat = 'l, M j';
   $monthDayFormat = 'F j';
   $yearFormat = 'Y';
@@ -573,7 +581,8 @@ function theme_cul_hours_exceptions($exceptionHoursList) {
  * session...uses cul_hours_default and cul_hours_exceptions
  * themes
  */
-function theme_cul_hours_academicsemester($academicSemesterHoursInfo) {
+function theme_cul_hours_academicsemester($variables) {
+  $academicSemesterHoursInfo = $variables['academicSemesterHoursInfo'];
 
   if (empty($academicSemesterHoursInfo)) {
     $output .= '<p>No Hours Available for this Location</p>';
@@ -619,9 +628,9 @@ function theme_cul_hours_academicsemester($academicSemesterHoursInfo) {
           //                  }
           //               } else {
           // display default hours first, then exceptions
-          $output .= theme('cul_hours_default', $hoursPackage);
+          $output .= theme('cul_hours_default', array('hoursPackage' => $hoursPackage));
           if (!empty($exceptionHoursList)) {
-            $exceptionHours = theme('cul_hours_exceptions', $exceptionHoursList);
+            $exceptionHours = theme('cul_hours_exceptions', array('exceptionHoursList' => $exceptionHoursList));
             $output .= $exceptionHours;
           }
           //          }
@@ -629,7 +638,7 @@ function theme_cul_hours_academicsemester($academicSemesterHoursInfo) {
       }
       else {
         // No exceptions, just show default hours
-        $output .= theme('cul_hours_default', $hoursPackage);
+        $output .= theme('cul_hours_default', array('hoursPackage' => $hoursPackage));
       }
 
       $output .= '</div><!--semesterHours-->' . "\n";
@@ -644,7 +653,8 @@ function theme_cul_hours_academicsemester($academicSemesterHoursInfo) {
  * each semester/session in the year and call the
  * cul_hours_academicsemester theme function
  */
-function theme_cul_hours_academicyear($hoursInfo) {
+function theme_cul_hours_academicyear($variables) {
+  $hoursInfo = $variables['hoursInfo'];
 
   if (empty($hoursInfo)) {
     $output .= '<p>No Hours Available for this Location</p>';
@@ -654,7 +664,7 @@ function theme_cul_hours_academicyear($hoursInfo) {
     $i = 1;
     if (isset($hoursInfo->academicSemesterList)) {
       foreach ($hoursInfo->academicSemesterList as $academicSemesterHoursInfo) {
-        $output .= theme('cul_hours_academicsemester', $academicSemesterHoursInfo);
+        $output .= theme('cul_hours_academicsemester', array('academicSemesterHoursInfo' => $academicSemesterHoursInfo));
         $hoursPackage = $academicSemesterHoursInfo->semesterHoursPackage;
 
         // strip year from tail end of packageName
@@ -683,7 +693,7 @@ function theme_cul_hours_academicyear($hoursInfo) {
 }
 
 /**
- * Implementation of hook_help()
+ * Implements hook_help().
  */
 function cul_hours_help($path, $arg) {
   if ($path == 'admin/help#libraryhours') {
@@ -831,6 +841,10 @@ function _cul_hours_closed_all_day($hours) {
 
 }
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function cul_hours_test() {
 
   drupal_set_title('Library Hours');
@@ -840,6 +854,10 @@ function cul_hours_test() {
 
 /*
  * Theme the main CUL hours and maps display.
+ */
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
  */
 function theme_cul_hours_test() {
 
