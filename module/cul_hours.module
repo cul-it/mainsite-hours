@@ -382,8 +382,7 @@ function theme_cul_hours_about() {
  * Theme opening and closing hours for today. Input is a $hoursInfo structure.
  */
 function theme_cul_hours_today($variables) {
-  dsm($variables); return 'nothig';
-  $hours = $variables['hours'];
+  $hours = $variables;
   $format = 'g:i a';
   $dayformat = 'l, F j, Y';
   if (empty($hours)) {
@@ -412,7 +411,7 @@ function theme_cul_hours_today($variables) {
  * - modified to account for 24 hour openings & other locations -jgr25
  */
 function theme_cul_hours_default($variables) {
-  $hoursPackage = $variables['hoursPackage'];
+  $hoursPackage = $variables;
   $timeformat = 'g:i a';
   $dateCompareFormat = 'Ymd';
   $dayList = $hoursPackage->dayList;
