@@ -76,7 +76,7 @@ function cul_hours_init() {
 
   // Initial query to retrieve list of unit library nodes
   $results = db_query("select title from {node} where type='unit_library' order by title");
-  while ($data = db_fetch_object($results)) {
+  while ($data = fetchAssoc($results)) {
     // Secondary query to retrieve latitude and longitude for each library
     // TODO Please convert this statement to the D7 database API syntax.
     //$r2 = db_query("select latitude, longitude from {location} where name='" . $data->title . "'");
