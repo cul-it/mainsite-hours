@@ -82,7 +82,7 @@ function cul_hours_init() {
     //$r2 = db_query("select latitude, longitude from {location} where name='" . $data->title . "'");
     //$d2 = db_fetch_object($r2);
     $r2 = db_query("select latitude, longitude from {location} where name = :title",
-      array(':title' => $data->title));
+      array(':title' => $data['title']));
     $d2 = $r2->fetchAssoc();
 
     // HACK: let's ignore the Medical School library resources because we never update their hours
@@ -94,7 +94,6 @@ function cul_hours_init() {
      * to either a hard-coded or a configurable list!
      */
     $title = $data['title'];
-    dsm(array($data, $title));
     if ($title == 'Medical Library' or $title == 'Medical Center Archives' or $title == 'Entomology Library') {
       continue;
     }
@@ -106,10 +105,10 @@ function cul_hours_init() {
 
     $libs[] = array(
       "title" => $title,
-      "lat" => $d2->latitude,
-      "long" => $d2->longitude,
-      "open" => _cul_hours_isopen($data->title), // Whether library is currently open
-      "today" => cul_hours_today($data->title), // Today's hours
+      "lat" => $d2['latitude'],
+      "long" => $d2['longitude'],
+      "open" => _cul_hours_isopen($title), // Whether library is currently open
+      "today" => cul_hours_today($title), // Today's hours
     );
 
     // We also need a slightly different naming scheme for the campus map, unfortunately
