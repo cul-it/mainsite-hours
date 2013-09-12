@@ -76,14 +76,14 @@ function cul_hours_init() {
 
   // Initial query to retrieve list of unit library nodes
   $results = db_query("select title from {node} where type='unit_library' order by title");
-  while ($data = fetchAssoc($results)) {
+  while ($data = $results->fetchAssoc()) {
     // Secondary query to retrieve latitude and longitude for each library
     // TODO Please convert this statement to the D7 database API syntax.
     //$r2 = db_query("select latitude, longitude from {location} where name='" . $data->title . "'");
     //$d2 = db_fetch_object($r2);
     $r2 = db_query("select latitude, longitude from {location} where name = :title",
       array(':title' => $data->title));
-    $d2 = fetchAssoc($r2);
+    $d2 = $r2->fetchAssoc();
 
     // HACK: let's ignore the Medical School library resources because we never update their hours
     // anyway...
