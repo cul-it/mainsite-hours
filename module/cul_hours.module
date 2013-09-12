@@ -94,6 +94,7 @@ function cul_hours_init() {
      * to either a hard-coded or a configurable list!
      */
     $title = $data->title;
+    dsm(array($data, $title));
     if ($title == 'Medical Library' or $title == 'Medical Center Archives' or $title == 'Entomology Library') {
       continue;
     }
