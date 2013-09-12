@@ -382,6 +382,7 @@ function theme_cul_hours_about() {
  * Theme opening and closing hours for today. Input is a $hoursInfo structure.
  */
 function theme_cul_hours_today($variables) {
+  dsm($variables); return 'nothig';
   $hours = $variables['hours'];
   $format = 'g:i a';
   $dayformat = 'l, F j, Y';
