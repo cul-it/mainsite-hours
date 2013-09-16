@@ -385,6 +385,7 @@ function theme_cul_hours_today($variables) {
   $hours = $variables;
   $format = 'g:i a';
   $dayformat = 'l, F j, Y';
+  $output = '';
   if (empty($hours)) {
     $output .= '<b>No Hours Available for this Location</b>';
   }
