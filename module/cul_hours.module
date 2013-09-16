@@ -178,8 +178,7 @@ function _cul_hours_isopen($name) {
   $url = $host . "/LibServices/showLibraryHoursStatus.do?location=" . urlencode($abbrev_map[$name]) . "&date=" . date('Y-m-d') . '&start=' . date('H:i:s') . "&end=" . date('H:i:s') . "&output=json";
 
   $hoursInfo = getLibraryHoursJson($url);
-  dsm($hoursInfo);
-  if ($hoursInfo->String == "true") {
+  if (!empty($hoursInfo) && $hoursInfo->String == "true") {
     return 1;
   }
   else {
