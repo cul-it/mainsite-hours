@@ -732,9 +732,15 @@ function getLibraryHoursJson($url) {
 function get_formatted_date($u, $fmt) {
 
   $local_timezone = date_default_timezone_get();
-  $d = date_make_date($u, $local_timezone, DATE_UNIX);
-  $formatted_date = date_format_date($d, 'custom', $fmt);
-
+  if (module_exists('date_api')) {
+    //$d = date_make_date($u, $local_timezone, DATE_UNIX);
+    //$formatted_date = date_format_date($d, 'custom', $fmt);
+    $start = new DateObject();
+    $formatted_date = $start->format($fmt);
+  }
+  else {
+    $formatted_date = t('needs date_api module!');
+  }
   return $formatted_date;
 }
 
