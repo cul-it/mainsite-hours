@@ -891,7 +891,7 @@ function theme_cul_hours_test() {
   // Add the iframe for the campus map
   $output .= '
       <div id="outerdiv">
-      <iframe id="campusmap" src="http://www.cornell.edu/maps?iframe=1&hideLocList=1&hideDir=1&hideOverlays=1&zoom=15&suppressUserLoc=1" width="50%" height="550" frameborder="0"><p>The map is not appearing because the web browser in use does not support iframes.</p></iframe>
+      <iframe id="campusmap" src="//www.cornell.edu/maps?iframe=1&hideLocList=1&hideDir=1&hideOverlays=1&zoom=15&suppressUserLoc=1" width="50%" height="550" frameborder="0"><p>The map is not appearing because the web browser in use does not support iframes.</p></iframe>
       </div>';
 
   return $output;
