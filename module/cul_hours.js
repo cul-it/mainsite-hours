@@ -6,6 +6,7 @@
  * The cul_hours object.
  */
 var cul_hours = {};
+document.domain = 'cornell.edu';
 
 if (true) { // obsolete in Drupal 7 (https://drupal.org/node/254940#no-jsenabled): Drupal.jsEnabled) {
 
@@ -14,7 +15,6 @@ if (true) { // obsolete in Drupal 7 (https://drupal.org/node/254940#no-jsenabled
       $('#details').html('<span class="hoursprompt">Click on a location from the list at the left to see the full semester schedule.</span>');
 
       // Create the custom overlay for the CU Google map
-          document.domain = 'cornell.edu';
       customOverlay = { title: 'Libraries',
                         iconURL: Drupal.settings.cul_hours.module_path + '/images/96-book.png'
                       };
