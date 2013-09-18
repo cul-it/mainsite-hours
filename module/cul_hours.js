@@ -83,6 +83,4 @@ if (true) { // obsolete in Drupal 7 (https://drupal.org/node/254940#no-jsenabled
 
    };  // End Drupal.behaviors.cul_hours definition
 }
-
-}
 })(jQuery);
