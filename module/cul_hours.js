@@ -81,6 +81,6 @@
          }
 
       }  // End Drupal.behaviors.cul_hours definition
-   }
+   };
 
 })(jQuery);
