@@ -5,13 +5,14 @@
 /**
  * The cul_hours object.
  */
+(function ($) {
 var cul_hours = {};
 document.domain = 'cornell.edu';
 
 if (true) { // obsolete in Drupal 7 (https://drupal.org/node/254940#no-jsenabled): Drupal.jsEnabled) {
 
    // This appends all our jQuery stuff to the Drupal behaviors variable
-   Drupal.behaviors.cul_hours = function (context) {
+   Drupal.behaviors.cul_hours = { attach: function (context) {
       $('#details').html('<span class="hoursprompt">Click on a location from the list at the left to see the full semester schedule.</span>');
 
       // Create the custom overlay for the CU Google map
@@ -81,6 +82,7 @@ if (true) { // obsolete in Drupal 7 (https://drupal.org/node/254940#no-jsenabled
       }
 
    };  // End Drupal.behaviors.cul_hours definition
-
 }
 
+}
+})(jQuery);
