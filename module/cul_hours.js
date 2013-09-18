@@ -11,7 +11,7 @@
 
    // This appends all our jQuery stuff to the Drupal behaviors variable
    Drupal.behaviors.cul_hours = {
-      attach: function (context) {
+      attach: function (context, settings) {
          $('#details').html('<span class="hoursprompt">Click on a location from the list at the left to see the full semester schedule.</span>');
 
          // Create the custom overlay for the CU Google map
@@ -81,4 +81,6 @@
          }
 
       }  // End Drupal.behaviors.cul_hours definition
+   }
+
 })(jQuery);
