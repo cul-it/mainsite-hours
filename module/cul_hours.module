@@ -730,10 +730,8 @@ function getLibraryHoursJson($url) {
  * formatting string
  */
 function get_formatted_date($u, $fmt) {
-
-  $local_timezone = date_default_timezone_get();
   if (module_exists('date_api')) {
-    $start = new DateObject();
+    $start = new DateObject($u);
     $formatted_date = $start->format($fmt);
   }
   else {
