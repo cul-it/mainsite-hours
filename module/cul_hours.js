@@ -7,7 +7,7 @@
  */
 var cul_hours = {};
 
-if (Drupal.jsEnabled) {
+if (true) { // obsolete in Drupal 7 (https://drupal.org/node/254940#no-jsenabled): Drupal.jsEnabled) {
 
    // This appends all our jQuery stuff to the Drupal behaviors variable
    Drupal.behaviors.cul_hours = function (context) {
