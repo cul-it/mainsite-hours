@@ -683,7 +683,7 @@ function theme_cul_hours_academicyear($hoursInfo) {
                  $nextAcademicYear = $currentSummerYear . '-' . $followingYear;
                  $output .= cul_hours_academicyear($location, $nextAcademicYear);
               }
-           }
+           } 
            $i++;
         }
       }
