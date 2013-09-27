@@ -415,9 +415,8 @@ function theme_cul_hours_default($variables) {
   $hoursPackage = $variables;
   $timeformat = 'g:i a';
   $dateCompareFormat = 'Ymd';
-  $dayList = $hoursPackage->dayList;
+  $dayList = $hoursPackage['hoursPackage']->dayList;
   $ndays = count($dayList);
-
 
   $output .= '<div class="regularHours">';
   $output .= '<ul class="libraryHours">';
@@ -654,6 +653,7 @@ function theme_cul_hours_academicsemester($variables) {
  */
 function theme_cul_hours_academicyear($variables) {
   $hoursInfo = $variables['hoursInfo'];
+  $output = '';
 
   if (empty($hoursInfo)) {
     $output .= '<p>No Hours Available for this Location</p>';
@@ -893,7 +893,7 @@ function theme_cul_hours_test() {
   // Add the iframe for the campus map
   $output .= '
       <div id="outerdiv">
-      <iframe id="campusmap" src="//www.cornell.edu/maps?iframe=1&hideLocList=1&hideDir=1&hideOverlays=1&zoom=15&suppressUserLoc=1" width="50%" height="550" frameborder="0"><p>The map is not appearing because the web browser in use does not support iframes.</p></iframe>
+      <!-- <iframe id="campusmap" src="//www.cornell.edu/maps?iframe=1&hideLocList=1&hideDir=1&hideOverlays=1&zoom=15&suppressUserLoc=1" width="50%" height="550" frameborder="0"><p>The map is not appearing because the web browser in use does not support iframes.</p></iframe> -->
       </div>';
 
   return $output;
