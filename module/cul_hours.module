@@ -234,6 +234,7 @@ function cul_hours_handle_ajax() {
   else {
     echo cul_hours_academicyear($location);
   }
+  exit(0);
 }
 
 /**
@@ -863,8 +864,8 @@ function theme_cul_hours_test() {
 
   // Create the header and start the table
   $today = date('l, F d, Y');
-  $output = "<h2 class='hours'><span id='htitle'>Today's Hours<br/>$today</span></h2>";
-  $output .= "<span id='showOption' style='text-align:center'><button type='button'>Show only what's open</button></span><span id='showNote'></span>";
+  $output = "<div id='htitle'>Today's Hours</div><div id='hdate'>$today</div>";
+  $output .= "<span id='showOption'><button type='button'>Show only what's open</button></span><span id='showNote'></span>";
 
   // Create the list of today's hours with links
   $table_content = '<ul class="hourscontent">';
