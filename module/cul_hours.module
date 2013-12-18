@@ -28,7 +28,7 @@ function cul_hours_init() {
   // TODO: set these to only load on the library hours page
   $module_path = drupal_get_path('module', 'cul_hours');
 
-  if ($_GET['q'] == 'libraryhours') {
+  if ($_GET['q'] == 'hours') {
     drupal_add_css($module_path . '/cul_hours.css');
     drupal_add_js($module_path . '/cul_hours.js');
   }
@@ -159,7 +159,7 @@ function cul_hours_exit() {
   // the display is being cached. This should force the cached page to clear at the end of
   // every request.
   global $base_url;
-  $url_pos = strpos($_GET['q'], 'libraryhours');
+  $url_pos = strpos($_GET['q'], 'hours');
   if ($url_pos !== FALSE) { // TODO: can we get rid of the hardcoded 'libraryhours'?
     cache_clear_all($base_url . '/' . $_GET['q'], 'cache_page');
   }
@@ -197,17 +197,17 @@ function cul_hours_menu() {
   //   'access callback' => TRUE,
   //   'type' => MENU_CALLBACK,
   //  );
-  $items['libraryhours/about'] = array(
+  $items['hours/about'] = array(
     'page callback' => 'cul_hours_about',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['libraryhours'] = array(
+  $items['hours'] = array(
     'page callback' => 'cul_hours_test',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['libraryhours/get/semester/%'] = array(
+  $items['hours/get/semester/%'] = array(
     'page callback' => 'cul_hours_handle_ajax',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
