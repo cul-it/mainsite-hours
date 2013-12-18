@@ -1,0 +1,72 @@
+   ul.hourscontent {
+      /*display: block;*/
+      height: 460px;
+      overflow: auto;
+      overflow-x: hidden;
+      width: 45%;
+      padding-left: 0px;
+      list-style-type: none;
+   }
+   ul.hourscontent li {
+      margin: 5px 5px;
+      padding: 5px;
+      border: 1px dashed;
+   }
+   ul.hourscontent li.open {
+	   background-image: url('images/library_open.png');
+      background-repeat: no-repeat;
+      background-position: right;
+   }
+   ul.hourscontent li.closed {
+      background-image: url('images/library_closed.png'); 
+      background-repeat: no-repeat;
+      background-position: right;
+
+   }
+   ul.hourscontent li.open:hover {
+      background-color: #A3FF85;
+      color: black;
+   }
+   ul.hourscontent li.closed:hover {
+      background-color: #FFCCCC;
+      color: black;
+   }
+   #outerdiv {
+
+   }
+   #campusmap {
+      width: 730px;
+      height: 600px;  
+
+   }
+   #details {
+      width: 380px;
+      height: 490px;
+      position: absolute;
+      top: 350px;
+      left: 50%;
+   }
+   .detail_display {
+      overflow: scroll;
+      overflow-x: hidden;
+   }
+   .today {
+      font-size: smaller;
+      font-weight: bold;
+      text-transform: uppercase;
+   }
+   .hoursprompt {
+      position: absolute; 
+      top: 40%;
+      font-size: x-large;
+      text-align: center;
+    }
+   #htitle {
+      font-size: 200%;
+   }
+   #hdate {
+      font-size: 120%;
+   }
+   #showoption {
+      text-align: center;
+   }
