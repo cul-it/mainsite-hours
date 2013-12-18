@@ -4,5 +4,5 @@ description = "Dynamic library hours display for all CUL locations"
 package = "Cornell University Library"
 core = 7.x
 php = 5.1
-version = "7.x-1.1"
+version = "7.x-1.2"
 dependencies[] = date_api
