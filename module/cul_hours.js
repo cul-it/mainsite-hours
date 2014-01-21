@@ -40,7 +40,7 @@
             // http://viralpatel.net/blogs/2011/02/jquery-get-text-element-without-child-element.html)
             var selectedLibrary = $(this).clone().children().remove().end().text();
             var itemIndex = $('li').index(this);
-            $.get('libraryhours/get/semester/' + selectedLibrary, function(data) {
+            $.get('hours/get/semester/' + selectedLibrary, function(data) {
                $('#details').addClass('detail_display').html("<h2>Details for " + selectedLibrary + ":</h2>" + data);
             });
 
