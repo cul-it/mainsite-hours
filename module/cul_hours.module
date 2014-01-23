@@ -282,7 +282,7 @@ function cul_hours_specificdate($location, $date, $checkweight = NULL) {
   else {
     $url = $host . "/LibServices/showLibraryHoursForDate.do?location=" . urlencode($location) . "&date=" . urlencode($date) . "&output=json";
     $hoursInfo = getLibraryHoursJson($url);
-    if ($checkweight == TRUE) {
+    if ($checkweight == TRUE && isset($hoursInfo)) {
       return $hoursInfo->weight;
     }
     else {
@@ -413,11 +413,15 @@ function theme_cul_hours_today($variables) {
  * - modified to account for 24 hour openings & other locations -jgr25
  */
 function theme_cul_hours_default($variables) {
+
+  $output = '';
   $hoursPackage = $variables;
   $timeformat = 'g:i a';
   $dateCompareFormat = 'Ymd';
   $dayList = $hoursPackage['hoursPackage']->dayList;
   $ndays = count($dayList);
+  $hoursPackage = $hoursPackage['hoursPackage'];
+
 
   $output .= '<div class="regularHours">';
   $output .= '<ul class="libraryHours">';
@@ -499,6 +503,7 @@ function theme_cul_hours_exceptions($variables) {
   $dateCompareFormat = 'Ymd';
   $current_exception_found = false;
   $exceptionoutput = '';
+  $output = '';
 
   foreach ($exceptionHoursList as $exceptionHoursInfo) {
 
@@ -583,6 +588,7 @@ function theme_cul_hours_exceptions($variables) {
 function theme_cul_hours_academicsemester($variables) {
   $academicSemesterHoursInfo = $variables['academicSemesterHoursInfo'];
 
+  $output = '';
   if (empty($academicSemesterHoursInfo)) {
     $output .= '<p>No Hours Available for this Location</p>';
   }
