@@ -473,7 +473,7 @@ function theme_cul_hours_default($variables) {
     $output .= '</span>';
 
     // label if today
-    if ($todaysWeight && $day == $dayOfWeek) {
+    if (isset($todaysWeight) && $day == $dayOfWeek) {
       $output .= '<span class="today">today</span>';
     }
     $output .= '</li>';
