@@ -112,40 +112,40 @@ function cul_hours_init() {
     );
 
     // We also need a slightly different naming scheme for the campus map, unfortunately
-    // HACK:
-    foreach ($libs as &$lib) {
-      $cul_map_names[$lib['title']] = trim($lib['title']); // Most of the names are the same
+    // // HACK:
+    // foreach ($libs as &$lib) {
+    //   $cul_map_names[$lib['title']] = trim($lib['title']); // Most of the names are the same
 
-      // Second hack: custom 'today' text for virtual libraries
-      if ($lib['title'] == 'Engineering Library') {
-        $lib['today'] = '24/7 Study Space and Computing Only';
-        $lib['open'] = true;
-      }
-      elseif ($lib['title'] == 'Physical Sciences Library (Edna McConnell Clark Library)') {
-        $lib['today'] = '24/7 Quiet Study Space Only';
-        $lib['open'] = true;
-      }
-    }
+    //   // Second hack: custom 'today' text for virtual libraries
+    //   if ($lib['title'] == 'Engineering Library') {
+    //     $lib['today'] = '24/7 Study Space and Computing Only';
+    //     $lib['open'] = true;
+    //   }
+    //   elseif ($lib['title'] == 'Physical Sciences Library (Edna McConnell Clark Library)') {
+    //     $lib['today'] = '24/7 Quiet Study Space Only';
+    //     $lib['open'] = true;
+    //   }
+    // }
     // HACK: modify library names in order to obtain the correct search results on the CU map
     //  $cul_map_names['Entomology Library'] = 'Comstock Hall';
-    $cul_map_names['Africana Library '] = 'Africana';
-    $cul_map_names['Ornithology Library'] = 'Ornithology';
-    $cul_map_names['Physical Sciences Library (Edna McConnell Clark Library)'] = 'Clark Hall';
-    $cul_map_names['Kroch Library, Division of Rare and Manuscript Collections'] = 'Olin Library';
-    $cul_map_names['Kroch Library, Division of Asia Collections'] = 'Olin Library';
-    $cul_map_names['Geneva Experiment Station Library'] = 'Jordan Hall';
-    $cul_map_names['ILR Library'] = 'Ives Hall';
+    // $cul_map_names['Africana Library '] = 'Africana';
+    // $cul_map_names['Ornithology Library'] = 'Ornithology';
+    // $cul_map_names['Physical Sciences Library (Edna McConnell Clark Library)'] = 'Clark Hall';
+    // $cul_map_names['Kroch Library, Division of Rare and Manuscript Collections'] = 'Olin Library';
+    // $cul_map_names['Kroch Library, Division of Asia Collections'] = 'Olin Library';
+    // $cul_map_names['Geneva Experiment Station Library'] = 'Jordan Hall';
+    // $cul_map_names['ILR Library'] = 'Ives Hall';
 
-    // Extra hack-ish: an update to the CUL maps started generating errors on
-    // the locations not hacked above....
-    $cul_map_names['Engineering Library'] = 'Carpenter Hall';
-    $cul_map_names['Fine Arts Library'] = 'Rand Hall';
-    $cul_map_names['Hotel Library'] = 'Statler Hall';
-    $cul_map_names['Law Library'] = 'Myron Taylor Hall';
-    $cul_map_names['Management Library'] = 'Sage Hall';
-    $cul_map_names['Mathematics Library'] = 'Malott Hall';
-    $cul_map_names['Music Library'] = 'Lincoln Hall';
-    $cul_map_names['Veterinary Library'] = 'Vet';
+    // // Extra hack-ish: an update to the CUL maps started generating errors on
+    // // the locations not hacked above....
+    // $cul_map_names['Engineering Library'] = 'Carpenter Hall';
+    // $cul_map_names['Fine Arts Library'] = 'Rand Hall';
+    // $cul_map_names['Hotel Library'] = 'Statler Hall';
+    // $cul_map_names['Law Library'] = 'Myron Taylor Hall';
+    // $cul_map_names['Management Library'] = 'Sage Hall';
+    // $cul_map_names['Mathematics Library'] = 'Malott Hall';
+    // $cul_map_names['Music Library'] = 'Lincoln Hall';
+    // $cul_map_names['Veterinary Library'] = 'Vet';
   }
   // Add the libs array to the system Javascript so that it can be manipulated directly
   drupal_add_js(array('cul_hours' => array('libs' => $libs, 'name_map' => $cul_map_names)), array('type' => 'setting', 'scope' => JS_DEFAULT));
@@ -898,10 +898,10 @@ function theme_cul_hours_test() {
   $output .= '<div id="details"><span class="hoursprompt">Click on a location from the list at the left to see the full semester schedule.</span></div>';
 
   // Add the iframe for the campus map
-  $output .= '
-      <div id="outerdiv">
-      <iframe id="campusmap" src="//www.cornell.edu/maps?iframe=1&hideLocList=1&hideDir=1&hideOverlays=1&zoom=15&suppressUserLoc=1" width="50%" height="550" frameborder="0"><p>The map is not appearing because the web browser in use does not support iframes.</p></iframe>
-      </div>';
+  // $output .= '
+  //     <div id="outerdiv">
+  //     <iframe id="campusmap" src="//www.cornell.edu/maps?iframe=1&hideLocList=1&hideDir=1&hideOverlays=1&zoom=15&suppressUserLoc=1" width="50%" height="550" frameborder="0"><p>The map is not appearing because the web browser in use does not support iframes.</p></iframe>
+  //     </div>';
 
   return $output;
 }

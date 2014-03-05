@@ -15,19 +15,19 @@
          $('#details').html('<span class="hoursprompt">Click on a location from the list at the left to see the full semester schedule.</span>');
 
          // Create the custom overlay for the CU Google map
-         customOverlay = { title: 'Libraries',
-                           iconURL: Drupal.settings.cul_hours.module_path + '/images/96-book.png'
-                         };
-         customOverlay.points = [];
-         libs = Drupal.settings.cul_hours.libs;
+         // customOverlay = { title: 'Libraries',
+         //                   iconURL: Drupal.settings.cul_hours.module_path + '/images/96-book.png'
+         //                 };
+         // customOverlay.points = [];
+         // libs = Drupal.settings.cul_hours.libs;
 
-         nameMap = Drupal.settings.cul_hours.name_map;
-         $.each(libs, function() {
-            customOverlay.points.push({ lat: this.lat,
-                                        lng: this.long,
-                                        title: this.title
-                                       });
-         });
+         // nameMap = Drupal.settings.cul_hours.name_map;
+         // $.each(libs, function() {
+         //    customOverlay.points.push({ lat: this.lat,
+         //                                lng: this.long,
+         //                                title: this.title
+         //                               });
+         // });
 
          // Attach event handler for when the user selects a particular library
          $('ul.hourscontent li').click( function() {
@@ -45,8 +45,8 @@
             });
 
             // Secondly, center the map
-            iframe = document.getElementById('campusmap');
-            iframe.src = "http://www.cornell.edu/maps?iframe=1&hideLocList=1&hideOverlays=1&hideDir=1&suppressUserLoc=1" + "&loc=" + nameMap[selectedLibrary];
+            // iframe = document.getElementById('campusmap');
+            // iframe.src = "http://www.cornell.edu/maps?iframe=1&hideLocList=1&hideOverlays=1&hideDir=1&suppressUserLoc=1" + "&loc=" + nameMap[selectedLibrary];
          });
 
          // Toggle between showing a list of all libraries and only those that are currently open

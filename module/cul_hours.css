@@ -1,6 +1,6 @@
    ul.hourscontent {
       /*display: block;*/
-      height: 460px;
+      height: 660px;
       overflow: auto;
       overflow-x: hidden;
       width: 45%;
@@ -34,14 +34,14 @@
    #outerdiv {
 
    }
-   #campusmap {
+/*   #campusmap {
       width: 730px;
       height: 600px;  
 
-   }
+   }*/
    #details {
       width: 380px;
-      height: 490px;
+      height: 690px;
       position: absolute;
       top: 350px;
       left: 50%;
