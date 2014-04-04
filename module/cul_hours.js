@@ -46,7 +46,7 @@ if (Drupal.jsEnabled) {
          
          // Secondly, center the map
          iframe = document.getElementById('campusmap');
-         iframe.src = "http://www.cornell.edu/maps?iframe=1&hideLocList=1&hideOverlays=1&hideDir=1&suppressUserLoc=1" + "&loc=" + nameMap[selectedLibrary];
+         iframe.src = "https://www.cornell.edu/maps?iframe=1&hideLocList=1&hideOverlays=1&hideDir=1&suppressUserLoc=1" + "&loc=" + nameMap[selectedLibrary];
       });
       
       // Toggle between showing a list of all libraries and only those that are currently open
