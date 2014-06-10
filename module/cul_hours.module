@@ -213,15 +213,16 @@ function cul_hours_menu() {
  * Callback function to handle AJAX request to retrieve details about a specific library's hours
  */
 function cul_hours_handle_ajax() {
+
    global $abbrev_map; 
    $location = $abbrev_map[arg(3)]; 
 
    // HACK: special messages for the virtual libraries (again)
    if ($location == 'PHYSCI') {
-      echo '24/7 study space is available in Clark Hall.';
+      echo '24/7 study space is available in Clark Hall';
    }
    elseif ($location == 'ENGR') {
-      echo '24/7 study space is available in Carpenter Hall.';
+      echo '24/7 study space is available in Carpenter Hall. An ID is required for access from 4:30 pm - 7:30 am.';
    }
    else {
       echo cul_hours_academicyear($location);   
@@ -303,18 +304,21 @@ function cul_hours_academicsemester($location) {
  * If year=NULL, service defaults to current academic year.
  */
 function cul_hours_academicyear($location, $year=NULL) {
-   global $host;
+   global $host; 
 
    if (empty ($location)) {
       drupal_set_message("The location must be specified when requesting academic year hours.");
       return '';
    } else {
-      if (empty ($year)) {
+      if (empty ($year)) { 
          $url = $host . "/LibServices/showLibraryHoursForAcademicYear.do?location=" . urlencode($location) . "&output=json";
       } else {
          $url = $host . "/LibServices/showLibraryHoursForAcademicYear.do?location=" . urlencode($location) . "&year=" .urlencode($year) . "&output=json";
       }
+      watchdog('matt-debug', "Starting: loc = $location, year = $year, host = $host");
       $hoursInfo = getLibraryHoursJson($url);
+      watchdog('matt-debug', 'Done: '. print_r($hoursInfo,1));
+
       
       return theme('cul_hours_academicyear', $hoursInfo);
   }
@@ -410,7 +414,7 @@ function theme_cul_hours_default($hoursPackage) {
    // but only do this for the semester where today's date actually resides
    if (date($dateCompareFormat, $hoursPackage->fromDate) <= date($dateCompareFormat) &&
        date($dateCompareFormat, $hoursPackage->toDate)   >= date($dateCompareFormat)) {
-      $today = date("y-m-d");
+      $today = date("Y-m-d");
       $dayOfWeek = date("l");
   	   $location = $hoursPackage->locationName;
       $todaysWeight = cul_hours_specificdate($location, $today, TRUE);
@@ -671,19 +675,21 @@ function theme_cul_hours_academicyear($hoursInfo) {
            $semesterName = substr($hoursPackage->packageName, 0, -5);
            
            $fromDate = $hoursPackage->fromDate;
-           $dateCompareFormat = 'Ymd';
+           $dateCompareFormat = 'Y-m-d';
         
            // check to see if we've already entered the Summer Session
            // if so, let's include the hours for the following academic year
-           if ($i == $numSemesters) {
+           // if ($i == $numSemesters) {
+           watchdog('matt-debug', 'dcf = ' . date($dateCompareFormat) . ', from = ' . date($dateCompareFormat, $fromDate));
               if (strtotime(date($dateCompareFormat)) - strtotime(date($dateCompareFormat, $fromDate)) < 0) {
+                watchdog('matt-debug', 'going for it!');
                  $location = $hoursPackage->locationName;
                  $currentSummerYear = date("Y", $fromDate);
                  $followingYear = $currentSummerYear + 1;
                  $nextAcademicYear = $currentSummerYear . '-' . $followingYear;
                  $output .= cul_hours_academicyear($location, $nextAcademicYear);
               }
-           } 
+           //}
            $i++;
         }
       }
@@ -712,12 +718,16 @@ function cul_hours_help($path, $arg) {
  */
 function getLibraryHoursJson($url) {
    
+   if (substr_count($url, 'AcademicYear') > 0) { watchdog('matt-debug', 'Sending request to '. $url); }
    $http_result = drupal_http_request($url);
+  if (substr_count($url, 'AcademicYear') > 0) { watchdog('matt-debug', "code: " . $http_result->code); }
    if ($http_result->code == 200) {
+      if (substr_count($url, 'AcademicYear') > 0) { watchdog('matt-debug', 'got back data: ' . $http_result->data); }
       $data = $http_result->data;
-      $c = json_decode($data);
+      $c = json_decode($data); 
       if (empty ($c)) {
         // drupal_set_message("Unable to decode json from library hours service");
+        watchdog('matt-debug', 'ERROR from URL!  ' .$url . "; data is $data");
       }
       return $c;
    } else { // Otherwise we don't have any data
@@ -877,7 +887,7 @@ function theme_cul_hours_test() {
    // Add the iframe for the campus map
    $output .= '
       <div id="outerdiv">
-      <iframe id="campusmap" src="https://www.cornell.edu/maps?iframe=1&hideLocList=1&hideDir=1&hideOverlays=1&zoom=15&suppressUserLoc=1" width="50%" height="550" frameborder="0"><p>The map is not appearing because the web browser in use does not support iframes.</p></iframe>
+      <iframe id="campusmap" src="http://www.cornell.edu/maps?iframe=1&hideLocList=1&hideDir=1&hideOverlays=1&zoom=15&suppressUserLoc=1" width="50%" height="550" frameborder="0"><p>The map is not appearing because the web browser in use does not support iframes.</p></iframe>
       </div>';
       
    return $output;
