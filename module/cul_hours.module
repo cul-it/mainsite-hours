@@ -222,7 +222,7 @@ function cul_hours_handle_ajax() {
       echo '24/7 study space is available in Clark Hall';
    }
    elseif ($location == 'ENGR') {
-      echo '24/7 study space is available in Carpenter Hall. An ID is required for access from 4:30 pm - 7:30 am.';
+      echo '24/7 study space is available in Carpenter Hall. An ID is required for access from 4:30 pm - 7:30 am. Closed for major holidays.';
    }
    else {
       echo cul_hours_academicyear($location);   
