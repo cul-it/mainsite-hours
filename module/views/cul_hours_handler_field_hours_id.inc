@@ -6,7 +6,7 @@
  */
 
 /**
- * Provide the first name only from the name field.
+ * Provide the open times for the given library id.
  *
  * @ingroup views_filter_handlers
  */
