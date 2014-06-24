@@ -932,7 +932,7 @@ function cul_hours_field_formatter_info() {
       // the label is is what is displayed in the select box in the UI.
       'label' => t('Library Hours listing with Open if appropriate'),
       // field types is the important bit!! List the field types your formatter is for.
-      'field types' => array('field_hours_id'),
+      'field types' => array('text'),
       // You can usually leave 'multiple values' as follows:
       'multiple values' => FIELD_BEHAVIOR_DEFAULT,
     ),
