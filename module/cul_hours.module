@@ -949,7 +949,7 @@ function cul_hours_field_formatter_view($entity_type, $entity, $field, $instance
 function theme_cul_hours_formatter_cul_hours_field_hours_id($element) {
   if (isset($element['element']['safe_value'])) {
     $id = $element['element']['safe_value'];
-    return $id . "-> " . cul_hours_dailyHoursFromId($id);
+    return cul_hours_dailyHoursFromId($id);
   }
 }
 
