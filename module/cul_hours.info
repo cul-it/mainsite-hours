@@ -6,5 +6,3 @@ core = 7.x
 php = 5.1
 version = "7.x-1.4"
 dependencies[] = date_api
-
-files[] = views/cul_hours_handler_field_hours_id.inc
