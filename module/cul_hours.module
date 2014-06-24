@@ -366,6 +366,11 @@ function cul_hours_theme() {
         'hoursInfo' => NULL,
       ),
     ),
+    'cul_hours_formatter_cul_hours_field_hours_id' => array(
+      'variables' => array(
+        'element' => NULL,
+      ),
+    ),
   );
 }
 
@@ -914,4 +919,46 @@ function cul_hours_views_api() {
     'api' => 3,
     'path' => drupal_get_path('module', 'cul_hours') . '/views',
   );
+}
+
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function cul_hours_field_formatter_info() {
+  return array(
+    // the key must be unique, so it's best to prefix with your module's name.
+    'cul_hours_field_hours_id' => array(
+      // the label is is what is displayed in the select box in the UI.
+      'label' => t('Library Hours listing with Open if appropriate'),
+      // field types is the important bit!! List the field types your formatter is for.
+      'field types' => array('field_hours_id'),
+      // You can usually leave 'multiple values' as follows:
+      'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view(). This code just passes straight
+ * through to a theme function, cul_hours_formatter_FORMATTER
+ * (e.g. cul_hours_formatter_cul_hours_absolute_url).
+ */
+function cul_hours_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $elements = array();
+  foreach ($items as $delta => $item) {
+    $elements[$delta] = array(
+      '#markup' => theme('cul_hours_formatter_'. $display['type'], array('element' => $item, 'field' => $instance)),
+    );
+  }
+  return $elements;
+}
+
+/**
+ * Theme function for 'cul_hours_field_hours_id'  field formatter.
+ */
+function theme_cul_hours_formatter_cul_hours_field_hours_id($element) {
+  return "Rendered by cul_hours_field_hours_id";
+  // This code is specific to the Link field. It is based on theme_link_formatter_plain().
+  return empty($element['element']['url']) ? check_plain($element['element']['title']) : url($element['element']['url'], array('absolute' => TRUE, 'attributes' => $element['element']['attributes']));
 }
