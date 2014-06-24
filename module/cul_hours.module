@@ -958,7 +958,7 @@ function cul_hours_field_formatter_view($entity_type, $entity, $field, $instance
  * Theme function for 'cul_hours_field_hours_id'  field formatter.
  */
 function theme_cul_hours_formatter_cul_hours_field_hours_id($element) {
-  return "Rendered by cul_hours_field_hours_id";
+  return "Rendered by cul_hours_field_hours_id: " . print_r($element, true);
   // This code is specific to the Link field. It is based on theme_link_formatter_plain().
   return empty($element['element']['url']) ? check_plain($element['element']['title']) : url($element['element']['url'], array('absolute' => TRUE, 'attributes' => $element['element']['attributes']));
 }
