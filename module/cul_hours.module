@@ -1031,5 +1031,15 @@ function cul_hours_dailyHoursFromId($id) {
  * updates the library_hours cache
  */
 function cul_hours_cron() {
+  global $abbrev_map;
+
   watchdog('cul_hours', 'cul_hours_cron called at @datestamp', array('@datestamp' => gmDate("Y-m-d\TH:i:s\Z")), WATCHDOG_NOTICE);
+
+  foreach($abbrev_map as $name => $id) {
+    // clear out the current cached entry for this library
+    cache_clear_all('daily_hours_'.$id, 'cache');
+    // reload the cache
+    $ignore = cul_hours_dailyHoursFromId($id);
+  }
+
 }
