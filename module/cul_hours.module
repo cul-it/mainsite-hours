@@ -1025,3 +1025,11 @@ function cul_hours_dailyHoursFromId($id) {
   return $output;
 }
 
+/**
+ * Implementation of hook_cron().
+ *
+ * updates the library_hours cache
+ */
+function cul_hours_cron() {
+  watchdog('cul_hours', 'cul_hours_cron called at @datestamp', array('@datestamp' => gmDate("Y-m-d\TH:i:s\Z")), WATCHDOG_NOTICE);
+}
