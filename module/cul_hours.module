@@ -202,11 +202,11 @@ function cul_hours_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['hours'] = array(
-    'page callback' => 'cul_hours_test',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
+  // $items['hours'] = array(
+  //   'page callback' => 'cul_hours_test',
+  //   'access callback' => TRUE,
+  //   'type' => MENU_CALLBACK,
+  // );
   $items['hours/get/semester/%'] = array(
     'page callback' => 'cul_hours_handle_ajax',
     'access callback' => TRUE,
