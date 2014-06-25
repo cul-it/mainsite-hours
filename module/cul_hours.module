@@ -1020,7 +1020,8 @@ function cul_hours_dailyHoursFromId($id) {
       }
     }
 
-    cache_set('daily_hours_'.$id, $output, 'cache', cul_hours_userTimeStamp() + 300);
+    // cache expires at 10 min, cron rebuilds every 5 min
+    cache_set('daily_hours_'.$id, $output, 'cache', cul_hours_userTimeStamp() + (300 * 2));
   }
   return $output;
 }
@@ -1029,11 +1030,12 @@ function cul_hours_dailyHoursFromId($id) {
  * Implementation of hook_cron().
  *
  * updates the library_hours cache
+ * set to run every 5 min
  */
 function cul_hours_cron() {
   global $abbrev_map;
 
-  watchdog('cul_hours', 'cul_hours_cron called at @datestamp', array('@datestamp' => gmDate("Y-m-d\TH:i:s\Z")), WATCHDOG_NOTICE);
+  //watchdog('cul_hours', 'cul_hours_cron called at @datestamp', array('@datestamp' => gmDate("Y-m-d\TH:i:s\Z")), WATCHDOG_NOTICE);
 
   foreach($abbrev_map as $name => $id) {
     // clear out the current cached entry for this library
