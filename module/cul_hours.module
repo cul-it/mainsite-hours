@@ -1038,10 +1038,20 @@ function cul_hours_cron() {
   //watchdog('cul_hours', 'cul_hours_cron called at @datestamp', array('@datestamp' => gmDate("Y-m-d\TH:i:s\Z")), WATCHDOG_NOTICE);
 
   foreach($abbrev_map as $name => $id) {
-    // clear out the current cached entry for this library
-    cache_clear_all('daily_hours_'.$id, 'cache');
-    // reload the cache
-    $ignore = cul_hours_dailyHoursFromId($id);
+    switch ($id) {
+      case 'PHYSCI':
+      case 'ENGR':
+        # the web service http://mannservices.mannlib.cornell.edu/LibServices/showLibraryHoursToday.do
+        # responds with an error 500 for these which gets into the logs
+        # avoid this here
+        break;
+      default:
+        // clear out the current cached entry for this library
+        cache_clear_all('daily_hours_'.$id, 'cache');
+         // reload the cache
+        $ignore = cul_hours_dailyHoursFromId($id);
+        break;
+    }
   }
 
 }
