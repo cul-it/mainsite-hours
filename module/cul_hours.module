@@ -1035,7 +1035,7 @@ function cul_hours_dailyHoursFromId($id) {
 function cul_hours_cron() {
   global $abbrev_map;
 
-  //watchdog('cul_hours', 'cul_hours_cron called at @datestamp', array('@datestamp' => gmDate("Y-m-d\TH:i:s\Z")), WATCHDOG_NOTICE);
+  watchdog('cul_hours', 'cul_hours_cron called at @datestamp', array('@datestamp' => gmDate("Y-m-d\TH:i:s\Z")), WATCHDOG_NOTICE);
 
   foreach($abbrev_map as $name => $id) {
     switch ($id) {
