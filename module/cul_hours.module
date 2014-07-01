@@ -1018,9 +1018,10 @@ function cul_hours_dailyHoursFromId($id) {
           "@end" => $end,
           "@output" => $output,
           "@userTimestamp" => cul_hours_userTimeStamp(),
+          "@currentTime" => time(),
           "@open_now" => $open_now,
           );
-        watchdog('cul_hours', '@id: Start @start; End @end; Output @output; Timestamp @userTimestamp; Open? @open_now', $details, WATCHDOG_NOTICE, 'link');
+        watchdog('cul_hours', '@id: Start @start; End @end; Output @output; Timestamp @userTimestamp; Time @currentTime; Open? @open_now', $details, WATCHDOG_NOTICE, 'link');
         //...debugging code
       }
 
