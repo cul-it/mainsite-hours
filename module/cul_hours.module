@@ -1012,7 +1012,7 @@ function cul_hours_dailyHoursFromId($id) {
         $open_now = (cul_hours_userTimeStamp() > $result->startTime && cul_hours_userTimeStamp() < $result->endTime);
 
         //debugging code:
-        $detils = array(
+        $details = array(
           "@id" => $id,
           "@start" => $start,
           "@end" => $end,
