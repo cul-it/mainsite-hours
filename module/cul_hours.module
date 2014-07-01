@@ -1050,7 +1050,9 @@ function cul_hours_cron() {
 
   watchdog('cul_hours', 'cul_hours_cron called at @datestamp', array('@datestamp' => gmDate("Y-m-d\TH:i:s\Z")), WATCHDOG_NOTICE);
 
-  foreach($abbrev_map as $name => $id) {
+  $abbrev_map_unique = array_unique($abbrev_map);
+
+  foreach($abbrev_map_unique as $name => $id) {
     switch ($id) {
       case 'PHYSCI':
       case 'ENGR':
