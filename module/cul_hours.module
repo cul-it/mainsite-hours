@@ -1010,6 +1010,17 @@ function cul_hours_dailyHoursFromId($id) {
         $end  = date("g:i a", $result->endTime);
         $output .= "$start - $end";
         $open_now = (cul_hours_userTimeStamp() > $result->startTime && cul_hours_userTimeStamp() < $result->endTime);
+
+        //debugging code:
+        $detils = array(
+          "@start" => $start,
+          "@end" => $end,
+          "@output" => $output,
+          "@userTimestamp" => cul_hours_userTimeStamp(),
+          "@open_now" => $open_now;
+          );
+        watchdog('cul_hours', 'Start @start; End @end; Output @output; Timestamp @userTimestamp; Open? @open_now', $details, WATCHDOG_NOTICE, 'link');
+        //...debugging code
       }
 
       if ($open_now) {
