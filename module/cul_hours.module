@@ -1013,13 +1013,14 @@ function cul_hours_dailyHoursFromId($id) {
 
         //debugging code:
         $detils = array(
+          "@id" => $id,
           "@start" => $start,
           "@end" => $end,
           "@output" => $output,
           "@userTimestamp" => cul_hours_userTimeStamp(),
           "@open_now" => $open_now,
           );
-        watchdog('cul_hours', 'Start @start; End @end; Output @output; Timestamp @userTimestamp; Open? @open_now', $details, WATCHDOG_NOTICE, 'link');
+        watchdog('cul_hours', '@id: Start @start; End @end; Output @output; Timestamp @userTimestamp; Open? @open_now', $details, WATCHDOG_NOTICE, 'link');
         //...debugging code
       }
 
