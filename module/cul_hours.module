@@ -217,7 +217,7 @@ function cul_hours_menu() {
     'title' => 'CUL Hours module settings',
     'description' => 'Set the block id and debugging time offset for cul_hours module.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('ocul_hours_admin'),
+    'page arguments' => array('cul_hours_admin'),
     'access arguments' => array('administer cul_hours settings'),
     'type' => MENU_NORMAL_ITEM,
   );
