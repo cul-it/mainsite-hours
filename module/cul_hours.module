@@ -1092,7 +1092,7 @@ function cul_hours_cron() {
         if (!$cache_changed) {
           // check for a change in the cached values
           $new_cache = cache_get('daily_hours_'.$id);
-          if ($cache != $new_cache) {
+          if (($cache === FALSE) || ($new_cache === FALSE) || strcmp($cache,$new_cache) != 0) {
             $cache_changed = TRUE;
           }
         }
