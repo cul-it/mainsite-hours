@@ -1119,7 +1119,7 @@ function cul_hours_admin() {
 function cul_hours_admin_validate($form, &$form_state) {
   $offset = $form_state['values']['cul_hours_time_offset'];
   if (!is_numeric($offset)) {
-    form_set_error('cul_hours_time_offset', t('Time offset must be a number of seconds.'))
+    form_set_error('cul_hours_time_offset', t('Time offset must be a number of seconds.'));
   }
 }
 
