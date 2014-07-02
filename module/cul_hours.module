@@ -1115,7 +1115,12 @@ function cul_hours_clear_block_cache() {
   $block_name = variable_get('cul_hours_block_id', 'libraries_and_hours-block_2');
   $block = block_load('views', $block_name);
   $cid = _block_get_cache_id($block);
-  cache_clear_all($cid, '*', TRUE);
+  if (!empty($cid)) {
+    cache_clear_all($cid, '*', TRUE);
+  }
+  else {
+    watchdog('cul_hours', 'could not find block: @block', array('@block' => $block_name), WATCHDOG_NOTICE, 'link');
+  }
 }
 
 /**
