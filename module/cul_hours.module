@@ -953,6 +953,10 @@ function theme_cul_hours_formatter_cul_hours_field_hours_id($element) {
   }
 }
 
+/**
+ * return unix timecode of current time
+ * @return [type] [description]
+ */
 function cul_hours_userTimeStamp() {
   // return timestamp in user's zone
   $date_string = format_date(time(), 'custom', 'F j, Y g\:H A');
@@ -963,6 +967,7 @@ function cul_hours_userTimeStamp() {
 function cul_hours_dailyHoursFromId($id) {
   $id = urlencode($id);
   $output = 'unknown result';
+  $UTC_now = time();
   # Hacks for 'static' library hours
   if ($id == 'Engineering') {
     $output = "24/7 study space and computing only";
@@ -1002,14 +1007,14 @@ function cul_hours_dailyHoursFromId($id) {
       elseif ($result->endTime == null && $result->startTime != null) {
         $start = date("g:i a", $result->startTime);
         $output .= "Opens at $start";
-        $open_now = (cul_hours_userTimeStamp() > $result->startTime);
+        $open_now = ($UTC_now > $result->startTime);
       }
       # Else normal business
       else {
         $start = date("g:i a", $result->startTime);
         $end  = date("g:i a", $result->endTime);
         $output .= "$start - $end";
-        $open_now = (cul_hours_userTimeStamp() > $result->startTime && cul_hours_userTimeStamp() < $result->endTime);
+        $open_now = ($UTC_now > $result->startTime && $UTC_now < $result->endTime);
 
         //debugging code:
         $details = array(
@@ -1018,14 +1023,14 @@ function cul_hours_dailyHoursFromId($id) {
           "@end" => $end,
           "@output" => $output,
           "@userTimestamp" => cul_hours_userTimeStamp(),
-          "@currentTime" => time(),
+          "@currentTime" => $UTC_now,
           "@open_now" => $open_now,
           );
         watchdog('cul_hours', '@id: Start @start; End @end; Output @output; Timestamp @userTimestamp; Time @currentTime; Open? @open_now', $details, WATCHDOG_NOTICE, 'link');
         //...debugging code
       }
 
-      if ($open_now) {
+      if ($open_now === TRUE) {
         $output .= '   <span class="label label-success">Open</span>';
       }
       else {
