@@ -1123,3 +1123,14 @@ function cul_hours_admin_validate($form, &$form_state) {
   }
 }
 
+/**
+ * Implements hook_permission().
+ */
+function ccul_hours_permission() {
+  return array(
+    'administer cul_hours settings' => array(
+      'title' => t('Access CUL Hours administrative settings'),
+    )
+  );
+}
+
