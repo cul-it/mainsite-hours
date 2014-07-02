@@ -213,6 +213,16 @@ function cul_hours_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['admin/settings/cul_hours'] = array(
+    'title' => 'CUL Hours module settings',
+    'description' => 'Set the block id and debugging time offset for cul_hours module.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ocul_hours_admin'),
+    'access arguments' => array('administer cul_hours settings'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+
   return $items;
 
 }
@@ -954,8 +964,8 @@ function theme_cul_hours_formatter_cul_hours_field_hours_id($element) {
 }
 
 /**
- * return unix timecode of current time
- * @return [type] [description]
+ * return unix timecode of current time offset to current timezone
+ * @return unix time code
  */
 function cul_hours_userTimeStamp() {
   // return timestamp in user's zone
@@ -1075,3 +1085,41 @@ function cul_hours_cron() {
   }
 
 }
+
+function cul_hours_clear_block_cache() {
+  $block_name = variable_get('cul_hours_block_id', 'libraries_and_hours-block_2');
+  $block = block_load('views', $block_name);
+  $cid = _block_get_cache_id($block);
+  cache_clear_all($cid, '*', TRUE);
+}
+
+function cul_hours_admin() {
+  $form = array();
+  $form['cul_hours_block_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Id of block containing the hours information'),
+    '#default_value' => variable_get('cul_hours_block_id', 'libraries_and_hours-block_2'),
+    '#size' => 30,
+    '#maxlength' => 60,
+    '#description' => t("Edit the view and find the machine name of the block. Example: libraries_and_hours-block_2"),
+    '#required' => TRUE,
+  );
+  $form['cul_hours_time_offset'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Number of seconds to offset current time'),
+    '#default_value' => variable_get('cul_hours_time_offset', 0),
+    '#size' => 12,
+    '#maxlength' => 12,
+    '#description' => t("Number of seconds to offset current time while testing the hours display. -14400 would be 4 hours ago."),
+    '#required' => TRUE,
+  );
+  return system_settings_form($form);
+}
+
+function cul_hours_admin_validate($form, &$form_state) {
+  $offset = $form_state['values']['cul_hours_time_offset'];
+  if (!is_numeric($offset)) {
+    form_set_error('cul_hours_time_offset', t('Time offset must be a number of seconds.'))
+  }
+}
+
