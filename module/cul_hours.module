@@ -219,7 +219,7 @@ function cul_hours_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('cul_hours_admin'),
     'access arguments' => array('administer cul_hours settings'),
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_CALLBACK,
   );
 
 
