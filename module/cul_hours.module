@@ -213,13 +213,13 @@ function cul_hours_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/settings/cul_hours'] = array(
+  $items['admin/config/cul_hours'] = array(
     'title' => 'CUL Hours module settings',
     'description' => 'Set the block id and debugging time offset for cul_hours module.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('cul_hours_admin'),
     'access arguments' => array('administer cul_hours settings'),
-    'type' => MENU_CALLBACK,
+    'type' => NORMAL_MENU_ITEM,
   );
 
 
