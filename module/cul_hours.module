@@ -978,6 +978,10 @@ function cul_hours_dailyHoursFromId($id) {
   $id = urlencode($id);
   $output = 'unknown result';
   $UTC_now = time();
+  $offset = variable_get('cul_hours_time_offset', 0);
+  if ($offset != 0) {
+    $UTC_now += ($offset * 60 * 60);
+  }
   # Hacks for 'static' library hours
   if ($id == 'Engineering') {
     $output = "24/7 study space and computing only";
@@ -1067,6 +1071,7 @@ function cul_hours_cron() {
 
   $abbrev_map_unique = array_unique($abbrev_map);
 
+  $cache_changed = FALSE;
   foreach($abbrev_map_unique as $name => $id) {
     switch ($id) {
       case 'PHYSCI':
@@ -1076,23 +1081,47 @@ function cul_hours_cron() {
         # avoid this here
         break;
       default:
+        if (!$cache_changed) {
+          // save the old cached values
+          $cache = cache_get('daily_hours_'.$id);
+        }
         // clear out the current cached entry for this library
         cache_clear_all('daily_hours_'.$id, 'cache');
          // reload the cache
         $ignore = cul_hours_dailyHoursFromId($id);
+        if (!$cache_changed) {
+          // check for a change in the cached values
+          $new_cache = cache_get('daily_hours_'.$id);
+          if ($cache != $new_cache) {
+            $cache_changed = TRUE;
+          }
+        }
         break;
+      }
     }
+
+  if ($cache_changed) {
+    cul_hours_clear_block_cache();
   }
 
 }
 
+/**
+ * clear the cached library hours block
+ * @return null
+ */
 function cul_hours_clear_block_cache() {
+  watchdog('cul_hours', 'called cul_hours_clear_block_cache', array(), WATCHDOG_NOTICE, 'link');
   $block_name = variable_get('cul_hours_block_id', 'libraries_and_hours-block_2');
   $block = block_load('views', $block_name);
   $cid = _block_get_cache_id($block);
   cache_clear_all($cid, '*', TRUE);
 }
 
+/**
+ * create administration form for cul_hours
+ * @return array form
+ */
 function cul_hours_admin() {
   $form = array();
   $form['cul_hours_block_id'] = array(
@@ -1106,20 +1135,26 @@ function cul_hours_admin() {
   );
   $form['cul_hours_time_offset'] = array(
     '#type' => 'textfield',
-    '#title' => t('Number of seconds to offset current time'),
+    '#title' => t('Number of hours to offset current time'),
     '#default_value' => variable_get('cul_hours_time_offset', 0),
     '#size' => 12,
     '#maxlength' => 12,
-    '#description' => t("Number of seconds to offset current time while testing the hours display. -14400 would be 4 hours ago."),
+    '#description' => t("Number of hours to offset current time while testing the hours display. -4 would be 4 hours ago."),
     '#required' => TRUE,
   );
   return system_settings_form($form);
 }
 
+/**
+ * form validation for admin form
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function cul_hours_admin_validate($form, &$form_state) {
   $offset = $form_state['values']['cul_hours_time_offset'];
   if (!is_numeric($offset)) {
-    form_set_error('cul_hours_time_offset', t('Time offset must be a number of seconds.'));
+    form_set_error('cul_hours_time_offset', t('Time offset must be a number of hours.'));
   }
 }
 
