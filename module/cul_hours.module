@@ -979,9 +979,13 @@ function cul_hours_dailyHoursFromId($id) {
   $output = 'unknown result';
   $UTC_now = time();
   $offset = variable_get('cul_hours_time_offset', 0);
+
+  // if debugging (offset not 0) set cache to expire asap
+  $cache_expire_minutes = ($offset == 0) ? 5 : 1;
   if ($offset != 0) {
     $UTC_now += ($offset * 60 * 60);
   }
+
   # Hacks for 'static' library hours
   if ($id == 'Engineering') {
     $output = "24/7 study space and computing only";
@@ -1052,8 +1056,8 @@ function cul_hours_dailyHoursFromId($id) {
       }
     }
 
-    // cache expires at 10 min, cron rebuilds every 5 min
-    cache_set('daily_hours_'.$id, $output, 'cache', cul_hours_userTimeStamp() + (300 * 2));
+    // cache expires after $cache_expire_minutes min
+    cache_set('daily_hours_'.$id, $output, 'cache', $UTC_now + (60 * $cache_expire_minutes));
   }
   return $output;
 }
@@ -1068,6 +1072,8 @@ function cul_hours_cron() {
   global $abbrev_map;
 
   watchdog('cul_hours', 'cul_hours_cron called at @datestamp', array('@datestamp' => gmDate("Y-m-d\TH:i:s\Z")), WATCHDOG_NOTICE);
+
+  return; // skip all this - use cache expire instead
 
   $abbrev_map_unique = array_unique($abbrev_map);
 
