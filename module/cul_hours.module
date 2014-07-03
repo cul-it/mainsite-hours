@@ -1113,37 +1113,11 @@ function cul_hours_cron() {
 }
 
 /**
- * clear the cached library hours block
- * @return null
- */
-function cul_hours_clear_block_cache() {
-  watchdog('cul_hours', 'called cul_hours_clear_block_cache', array(), WATCHDOG_NOTICE, 'link');
-  $block_name = variable_get('cul_hours_block_id', 'libraries_and_hours-block_2');
-  $block = block_load('views', $block_name);
-  $cid = _block_get_cache_id($block);
-  if (!empty($cid)) {
-    cache_clear_all($cid, '*', TRUE);
-  }
-  else {
-    watchdog('cul_hours', 'could not find block: @block', array('@block' => $block_name), WATCHDOG_NOTICE, 'link');
-  }
-}
-
-/**
  * create administration form for cul_hours
  * @return array form
  */
 function cul_hours_admin() {
   $form = array();
-  $form['cul_hours_block_id'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Id of block containing the hours information'),
-    '#default_value' => variable_get('cul_hours_block_id', 'libraries_and_hours-block_2'),
-    '#size' => 30,
-    '#maxlength' => 60,
-    '#description' => t("Edit the view and find the machine name of the block. Example: libraries_and_hours-block_2"),
-    '#required' => TRUE,
-  );
   $form['cul_hours_time_offset'] = array(
     '#type' => 'textfield',
     '#title' => t('Number of hours to offset current time'),
