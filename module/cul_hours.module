@@ -1051,56 +1051,6 @@ function cul_hours_dailyHoursFromId($id) {
 }
 
 /**
- * Implementation of hook_cron().
- *
- * updates the library_hours cache
- * set to run every 5 min
- */
-function cul_hours_cron() {
-  global $abbrev_map;
-
-  watchdog('cul_hours', 'cul_hours_cron called at @datestamp', array('@datestamp' => gmDate("Y-m-d\TH:i:s\Z")), WATCHDOG_NOTICE);
-
-  return; // skip all this - use cache expire instead
-
-  $abbrev_map_unique = array_unique($abbrev_map);
-
-  $cache_changed = FALSE;
-  foreach($abbrev_map_unique as $name => $id) {
-    switch ($id) {
-      case 'PHYSCI':
-      case 'ENGR':
-        # the web service http://mannservices.mannlib.cornell.edu/LibServices/showLibraryHoursToday.do
-        # responds with an error 500 for these which gets into the logs
-        # avoid this here
-        break;
-      default:
-        if (!$cache_changed) {
-          // save the old cached values
-          $cache = cache_get('daily_hours_'.$id);
-        }
-        // clear out the current cached entry for this library
-        cache_clear_all('daily_hours_'.$id, 'cache');
-         // reload the cache
-        $ignore = cul_hours_dailyHoursFromId($id);
-        if (!$cache_changed) {
-          // check for a change in the cached values
-          $new_cache = cache_get('daily_hours_'.$id);
-          if (($cache === FALSE) || ($new_cache === FALSE) || strcmp($cache,$new_cache) != 0) {
-            $cache_changed = TRUE;
-          }
-        }
-        break;
-      }
-    }
-
-  if ($cache_changed) {
-    cul_hours_clear_block_cache();
-  }
-
-}
-
-/**
  * create administration form for cul_hours
  * @return array form
  */
