@@ -963,17 +963,6 @@ function theme_cul_hours_formatter_cul_hours_field_hours_id($element) {
   }
 }
 
-/**
- * return unix timecode of current time offset to current timezone
- * @return unix time code
- */
-function cul_hours_userTimeStamp() {
-  // return timestamp in user's zone
-  $date_string = format_date(time(), 'custom', 'F j, Y g\:H A');
-  $timestamp = strtotime($date_string);
-  return $timestamp;
-}
-
 function cul_hours_dailyHoursFromId($id) {
   $id = urlencode($id);
   $output = 'unknown result';
@@ -1040,7 +1029,6 @@ function cul_hours_dailyHoursFromId($id) {
           "@start" => $start,
           "@end" => $end,
           "@output" => $output,
-          "@userTimestamp" => cul_hours_userTimeStamp(),
           "@currentTime" => $UTC_now,
           "@open_now" => $open_now,
           );
