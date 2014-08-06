@@ -52,7 +52,7 @@ function cul_hours_init() {
 
     //     'Entomology Library' => 'Entomology',
     'Fine Arts Library' => 'Fine Arts',
-    'Hotel Library' => 'Hotel',
+    'Hotel School Library' => 'Hotel',
     'Kroch Library, Division of Asia Collections' => 'Kroch',
     'Kroch Library, Division of Rare & Manuscript Collections' => 'Rare',
     'Kroch Library, Division of Rare and Manuscript Collections' => 'Rare',
