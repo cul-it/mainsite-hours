@@ -16,6 +16,7 @@
  *    2. Creates a translation array of library names and abbreviations
  *    3. Creates an array of active libraries (based on the Unit Library node type) with
  *       latitude, longitude, name, current open/close status, and today's hours for each entry.
+ *
  */
 function cul_hours_init() {
   global $host;
