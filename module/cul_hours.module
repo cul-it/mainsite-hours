@@ -1041,7 +1041,7 @@ function cul_hours_dailyHoursFromId($id) {
         $end  = date("g:i a", $result->endTime);
         $output = '   <span class="label label-success">Open</span> until';
       }
-        $output .= $end
+        $output .= $end;
       else {
         $output .= '   <span class="label label-danger">Closed</span>';
       }
