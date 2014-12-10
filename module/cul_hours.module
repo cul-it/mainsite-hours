@@ -1038,7 +1038,7 @@ function cul_hours_dailyHoursFromId($id) {
       }
 
       if ($open_now === TRUE) {
-        $output = '   <span class="label label-success">Open</span> until $end';
+        $output = '   <span class="label label-success">Open</span> until $endTime';
       }
       else {
         $output .= '   <span class="label label-danger">Closed</span>';
