@@ -1039,13 +1039,11 @@ function cul_hours_dailyHoursFromId($id) {
 
       if ($open_now === TRUE) {
         $end  = date("g:i a", $result->endTime);
-        $output = '   <span class="label label-success">Open</span> until';
+        $output = '   <span class="label label-success">Open</span> until ';
         $output .= $end;
       }
 
-      else {
-        $output .= '   <span class="label label-danger">Closed</span>';
-      }
+      
     }
 
     // cache expires after $cache_expire_minutes min
