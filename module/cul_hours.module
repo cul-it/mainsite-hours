@@ -1038,10 +1038,10 @@ function cul_hours_dailyHoursFromId($id) {
       }
 
       if ($open_now === TRUE) {
-        $output = '   <span class="label label-success">Open</span>'.$output;
+        $output = '<i class="fa fa-clock-o hours-open"></i>'.$output;
       }
       else {
-        $output = '   <span class="label label-danger">Closed</span>'.$output;
+        $output = '<i class="fa fa-clock-o hours-closed"></i>'.$output;
       }
     }
 
