@@ -1043,7 +1043,7 @@ function cul_hours_dailyHoursFromId($id) {
       }
 
       else{
-        $output .= " ";
+        $output = " ";
       }
 
       
