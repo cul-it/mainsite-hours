@@ -1003,7 +1003,6 @@ function cul_hours_dailyHoursFromId($id) {
       $output .= '   <span class="label label-danger">Closed</span>';
     }
     elseif ($result) {
-      $output = "<span>Today's hours</span> ";
       $open_now = false;
       # Check whether the library is starting open but closing during the day
       if ($result->startTime == null && $result->endTime != null) {
@@ -1038,7 +1037,7 @@ function cul_hours_dailyHoursFromId($id) {
       }
 
       if ($open_now === TRUE) {
-        $output = '<span class="label label-success">Open</span> <i class="fa fa-clock-o hours-open"></i>'.$output;
+        $output = "<i class='fa fa-clock-o hours-open'></i> <span>Today's hours</span> <span class='label label-success'>Open</span>".$output;
       }
       else {
         $output = '<i class="fa fa-clock-o hours-closed"></i>'.$output;
