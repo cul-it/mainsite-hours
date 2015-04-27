@@ -1045,7 +1045,7 @@ function cul_hours_dailyHoursFromId($id) {
 
       }
       else {
-        $output = '<i class="fa fa-clock-o hours-closed"></i>'.$output;
+        $output = "<i class='fa fa-clock-o hours-closed'></i>".$output;
       }
     }
 
