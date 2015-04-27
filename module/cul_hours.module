@@ -1047,7 +1047,7 @@ function cul_hours_dailyHoursFromId($id) {
       else {
         $end  = date("g:i a", $result->endTime);
         $start  = date("g:i a", $result->startTime);
-        $output = "<i class='fa fa-clock-o hours-closed'></i> <span class='label label-danger'>Closed</span>";
+        $output = "<i class='fa fa-clock-o hours-closed'></i> <span>Today's hours</span> <span class='label label-danger'>Closed</span>";
         $output .= "$start - $end";
       }
     }
