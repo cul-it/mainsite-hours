@@ -1040,14 +1040,14 @@ function cul_hours_dailyHoursFromId($id) {
         $end  = date("g:i a", $result->endTime);
         $start  = date("g:i a", $result->startTime);
 
-        $output = "<i class='fa fa-clock-o hours-open'></i> <span>Service Desk Hours</span> <span class='label label-success'>Open</span>";
+        $output = "<i class='fa fa-clock-o hours-open'></i> <span>Help Desk</span> <span class='label label-success'>Open</span>";
         $output .= "$start - $end";
 
       }
       else {
         $end  = date("g:i a", $result->endTime);
         $start  = date("g:i a", $result->startTime);
-        $output = "<i class='fa fa-clock-o hours-closed'></i> <span>Service Desk Hours</span> <span class='label label-danger'>Closed</span>";
+        $output = "<i class='fa fa-clock-o hours-closed'></i> <span>Help Desk</span> <span class='label label-danger'>Closed</span>";
         $output .= "$start - $end";
       }
     }
