@@ -21,7 +21,7 @@ function cul_hours_init() {
    global $host; global $base_url;
 
    //$host = 'http://victoria02.library.cornell.edu:8080';   # dev site
-   $host = 'http://mannservices.mannlib.cornell.edu';
+   $host = 'http://api.library.cornell.edu';
 
    // Load the module's CSS and JS files.
    // TODO: set these to only load on the library hours page
